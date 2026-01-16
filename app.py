@@ -392,6 +392,12 @@ def afficher_interface_europresse():
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
 
     if uploaded_file:
+        if (
+            st.session_state.get("processed_filename")
+            and st.session_state.get("processed_filename") != uploaded_file.name
+        ):
+            st.session_state["processed_data"] = None
+            st.session_state["processed_filename"] = None
         # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
         nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
         date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
@@ -447,8 +453,14 @@ def afficher_interface_europresse():
                 supprimer_balises = (supprimer_balises_radio == "Oui")
             )
 
-            texte_final_export = texte_final
-            data_for_csv_export = data_for_csv
+            processed_data = {
+                "base_name": base_name,
+                "texte_final": texte_final,
+                "data_for_csv": data_for_csv,
+                "articles_pour_doublons": articles_pour_doublons,
+                "recherche_doublons": recherche_doublons,
+                "longueur_minimale": longueur_minimale,
+            }
 
             if recherche_doublons:
                 (
@@ -460,6 +472,28 @@ def afficher_interface_europresse():
                     articles_pour_doublons,
                     longueur_minimale=longueur_minimale,
                 )
+                processed_data.update(
+                    {
+                        "articles_uniques": articles_uniques,
+                        "articles_doublons": articles_doublons,
+                        "articles_courts": articles_courts,
+                        "ordre_hashes": ordre_hashes,
+                    }
+                )
+
+            st.session_state["processed_data"] = processed_data
+            st.session_state["processed_filename"] = uploaded_file.name
+
+        processed_data = st.session_state.get("processed_data")
+
+        if processed_data:
+            texte_final_export = processed_data["texte_final"]
+            data_for_csv_export = processed_data["data_for_csv"]
+            base_name = processed_data["base_name"]
+
+            if processed_data["recherche_doublons"]:
+                articles_doublons = processed_data["articles_doublons"]
+                articles_courts = processed_data["articles_courts"]
 
                 st.markdown("### Résultats de la recherche de doublons")
                 st.write(f"Nombre d'articles en double : {len(articles_doublons)}")
@@ -489,16 +523,31 @@ def afficher_interface_europresse():
                     else:
                         st.write("Aucun article trop court détecté.")
 
-                choix_export = st.radio(
-                    "Exporter le corpus :",
-                    ("Avec doublons", "Sans doublons"),
-                    index=0,
+                exporter_sans_doublons = st.checkbox(
+                    "Exporter le corpus sans doublons"
+                )
+                exporter_sans_courts = st.checkbox(
+                    "Exporter le corpus sans les articles trop courts"
                 )
 
-                if choix_export == "Sans doublons":
-                    articles_uniques_liste = [articles_uniques[h] for h in ordre_hashes]
-                    texte_final_export = reconstruire_texte(articles_uniques_liste)
-                    data_for_csv_export = [article["csv"] for article in articles_uniques_liste]
+                articles_export = processed_data["articles_pour_doublons"]
+                if exporter_sans_doublons:
+                    articles_export = [
+                        processed_data["articles_uniques"][h]
+                        for h in processed_data["ordre_hashes"]
+                    ]
+
+                if exporter_sans_courts:
+                    longueur_minimale = processed_data["longueur_minimale"]
+                    articles_export = [
+                        article
+                        for article in articles_export
+                        if len(article["corps"]) >= longueur_minimale
+                    ]
+
+                if exporter_sans_doublons or exporter_sans_courts:
+                    texte_final_export = reconstruire_texte(articles_export)
+                    data_for_csv_export = [article["csv"] for article in articles_export]
 
             # 3) Créer un fichier CSV en mémoire
             csv_buffer = StringIO()
