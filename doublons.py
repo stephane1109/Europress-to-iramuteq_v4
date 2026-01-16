@@ -1,6 +1,11 @@
 import hashlib
+import re
 
 LONGUEUR_MINIMALE_PAR_DEFAUT = 300
+
+
+def compter_mots(texte):
+    return len(re.findall(r"\b\w+\b", texte))
 
 
 def detecter_doublons_articles(articles, longueur_minimale=LONGUEUR_MINIMALE_PAR_DEFAUT):
@@ -24,7 +29,7 @@ def detecter_doublons_articles(articles, longueur_minimale=LONGUEUR_MINIMALE_PAR
             articles_uniques[hash_article] = article
             ordre_hashes.append(hash_article)
 
-        if len(corps_article) < longueur_minimale:
+        if compter_mots(corps_article) < longueur_minimale:
             articles_courts.append(article)
 
     return articles_uniques, articles_doublons, articles_courts, ordre_hashes
