@@ -25,6 +25,12 @@ from io import StringIO, BytesIO
 import zipfile
 import streamlit.components.v1 as components
 from datetime import datetime
+from doublons import (
+    LONGUEUR_MINIMALE_PAR_DEFAUT,
+    detecter_doublons_articles,
+    reconstruire_texte,
+    extraire_apercu,
+)
 
 
 # -----------------------------------------
@@ -86,6 +92,7 @@ def extraire_texte_html(
     articles = soup.find_all('article')
     texte_final = ""
     data_for_csv = []
+    articles_pour_doublons = []
 
     for article in articles:
         # --------------------------------------------------------------------
@@ -328,7 +335,13 @@ def extraire_texte_html(
             'Article': texte_article
         })
 
-    return texte_final, data_for_csv
+        articles_pour_doublons.append({
+            "entete": info_debut.strip(),
+            "corps": texte_article,
+            "csv": data_for_csv[-1],
+        })
+
+    return texte_final, data_for_csv, articles_pour_doublons
 
 
 # --------------------------------------------------------------------
@@ -406,6 +419,16 @@ def afficher_interface_europresse():
             index=0
         )
 
+        recherche_doublons = st.checkbox("Recherche de doublons")
+        longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
+        if recherche_doublons:
+            longueur_minimale = st.number_input(
+                "Longueur minimale des articles (pour signaler les articles trop courts)",
+                min_value=0,
+                value=LONGUEUR_MINIMALE_PAR_DEFAUT,
+                step=10,
+            )
+
         if st.button("Lancer le traitement"):
             # 1) Récupérer le nom de fichier sans extension
             original_filename = uploaded_file.name  # ex: "mon_fichier.html"
@@ -413,7 +436,7 @@ def afficher_interface_europresse():
 
             # 2) Extraire le contenu HTML et traiter
             contenu_html = uploaded_file.getvalue().decode("utf-8")
-            texte_final, data_for_csv = extraire_texte_html(
+            texte_final, data_for_csv, articles_pour_doublons = extraire_texte_html(
                 contenu_html,
                 variable_suppl_texte,
                 nom_journal_checked,
@@ -424,16 +447,69 @@ def afficher_interface_europresse():
                 supprimer_balises = (supprimer_balises_radio == "Oui")
             )
 
+            texte_final_export = texte_final
+            data_for_csv_export = data_for_csv
+
+            if recherche_doublons:
+                (
+                    articles_uniques,
+                    articles_doublons,
+                    articles_courts,
+                    ordre_hashes,
+                ) = detecter_doublons_articles(
+                    articles_pour_doublons,
+                    longueur_minimale=longueur_minimale,
+                )
+
+                st.markdown("### Résultats de la recherche de doublons")
+                st.write(f"Nombre d'articles en double : {len(articles_doublons)}")
+                st.write(f"Nombre d'articles trop courts : {len(articles_courts)}")
+
+                with st.expander("Voir les articles en double"):
+                    if articles_doublons:
+                        for index, article in enumerate(articles_doublons, start=1):
+                            st.text_area(
+                                f"Doublon {index}",
+                                value=extraire_apercu(article, 300),
+                                height=120,
+                                key=f"doublon_{index}",
+                            )
+                    else:
+                        st.write("Aucun doublon détecté.")
+
+                with st.expander("Voir les articles trop courts"):
+                    if articles_courts:
+                        for index, article in enumerate(articles_courts, start=1):
+                            st.text_area(
+                                f"Article court {index}",
+                                value=extraire_apercu(article, 300),
+                                height=120,
+                                key=f"court_{index}",
+                            )
+                    else:
+                        st.write("Aucun article trop court détecté.")
+
+                choix_export = st.radio(
+                    "Exporter le corpus :",
+                    ("Avec doublons", "Sans doublons"),
+                    index=0,
+                )
+
+                if choix_export == "Sans doublons":
+                    articles_uniques_liste = [articles_uniques[h] for h in ordre_hashes]
+                    texte_final_export = reconstruire_texte(articles_uniques_liste)
+                    data_for_csv_export = [article["csv"] for article in articles_uniques_liste]
+
             # 3) Créer un fichier CSV en mémoire
             csv_buffer = StringIO()
             writer = csv.DictWriter(csv_buffer,
                                     fieldnames=['Journal', 'Année-mois-jour', 'Année-mois', 'Année', 'Article'])
             writer.writeheader()
-            for row in data_for_csv:
+            for row in data_for_csv_export:
                 writer.writerow(row)
 
             # *** Nouveau : Créer un fichier Excel (.xlsx) en mémoire ***
-            df = pd.DataFrame(data_for_csv)
+            df = pd.DataFrame(data_for_csv_export)
             excel_buffer = BytesIO()
             with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer_xlsx:
                 df.to_excel(writer_xlsx, index=False)
@@ -443,7 +519,7 @@ def afficher_interface_europresse():
             zip_buffer = BytesIO()
             with zipfile.ZipFile(zip_buffer, "w") as zf:
                 # Nommer les fichiers .txt, .csv et .xlsx comme le fichier HTML initial
-                zf.writestr(f"{base_name}.txt", texte_final)
+                zf.writestr(f"{base_name}.txt", texte_final_export)
                 zf.writestr(f"{base_name}.csv", csv_buffer.getvalue())
                 zf.writestr(f"{base_name}.xlsx", excel_buffer.getvalue())
 
@@ -451,7 +527,7 @@ def afficher_interface_europresse():
             st.markdown("### Aperçu du corpus traité")
             st.text_area(
                 label="",
-                value=texte_final,
+                value=texte_final_export,
                 height=300
             )
 
@@ -481,5 +557,3 @@ def afficher_interface_europresse():
 
 if __name__ == "__main__":
     afficher_interface_europresse()
-
-
