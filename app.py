@@ -318,7 +318,7 @@ def extraire_texte_html(
             info_debut += f" {annee_formattee}"
         if variable_suppl_texte:
             info_debut += f" *{variable_suppl_texte}"
-        info_debut += "\n"  # Fin de la 1ère ligne
+        info_debut += "\n\n"  # Fin de la 1ère ligne + ligne vide après le bloc
 
         # --------------------------------------------------------------------
         # 11) ON AJOUTE LE TEXTE DE L’ARTICLE APRÈS

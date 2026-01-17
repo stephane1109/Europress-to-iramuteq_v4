@@ -38,7 +38,7 @@ def detecter_doublons_articles(articles, longueur_minimale=LONGUEUR_MINIMALE_PAR
 def reconstruire_texte(articles):
     texte_final = ""
     for article in articles:
-        texte_final += f"{article['entete']}\n{article['corps']}\n\n"
+        texte_final += f"{article['entete']}\n\n{article['corps']}\n\n"
     return texte_final
 
 
