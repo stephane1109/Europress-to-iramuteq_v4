@@ -474,7 +474,7 @@ def afficher_interface_europresse():
     st.markdown("---")
 
     st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
-    televersement_icon_path = os.path.join(os.path.dirname(__file__), "televersement.png")
+    televersement_icon_path = os.path.join(os.path.dirname(__file__), "telechargement.png")
     televersement_icon_html = ""
     if os.path.exists(televersement_icon_path):
         with open(televersement_icon_path, "rb") as icon_file:
@@ -483,15 +483,13 @@ def afficher_interface_europresse():
             f'<img src="data:image/png;base64,{encoded_icon}" '
             'alt="Téléversement" style="width:32px;height:32px;" />'
         )
-    st.markdown(
-        f"""
-        <div style="display:flex;align-items:center;gap:8px;">
-            {televersement_icon_html}
-            <h2 style="margin:0;">Upload</h2>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    televersement_header_html = (
+        f'<div style="display:flex;align-items:center;gap:8px;">'
+        f'{televersement_icon_html}'
+        '<h2 style="margin:0;">Upload</h2>'
+        '</div>'
     )
+    st.markdown(televersement_header_html, unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
 
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
