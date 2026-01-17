@@ -574,6 +574,7 @@ def afficher_interface_europresse():
 
     with st.expander("Export", expanded=active_section == "exports"):
         if processed_data:
+            st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
             texte_final_export = processed_data["texte_final"]
             data_for_csv_export = processed_data["data_for_csv"]
             base_name = processed_data["base_name"]
