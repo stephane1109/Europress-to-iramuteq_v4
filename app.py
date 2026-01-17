@@ -351,9 +351,9 @@ def extraire_texte_html(
 
 # Interface Streamlit
 def afficher_interface_europresse():
-    active_section = st.query_params.get("section", "televersement")
+    active_section = st.query_params.get("section", "accueil")
     if isinstance(active_section, list):
-        active_section = active_section[0] if active_section else "televersement"
+        active_section = active_section[0] if active_section else "accueil"
 
     # Grand titre
     st.markdown(
@@ -417,41 +417,47 @@ def afficher_interface_europresse():
         unsafe_allow_html=True,
     )
 
-    bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
-    with bloc_1:
+    if active_section == "accueil":
+        bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
+        with bloc_1:
+            st.markdown(
+                """
+                <a class="feature-link" href="?section=televersement">
+                    <div class="feature-card">
+                        <div class="feature-title">📄 Import rapide</div>
+                        <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
+                    </div>
+                </a>
+                """,
+                unsafe_allow_html=True,
+            )
+        with bloc_2:
+            st.markdown(
+                """
+                <a class="feature-link" href="?section=options">
+                    <div class="feature-card">
+                        <div class="feature-title">🧹 Nettoyage</div>
+                        <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
+                    </div>
+                </a>
+                """,
+                unsafe_allow_html=True,
+            )
+        with bloc_3:
+            st.markdown(
+                """
+                <a class="feature-link" href="?section=exports">
+                    <div class="feature-card">
+                        <div class="feature-title">📦 Export</div>
+                        <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
+                    </div>
+                </a>
+                """,
+                unsafe_allow_html=True,
+            )
+    else:
         st.markdown(
-            """
-            <a class="feature-link" href="?section=televersement">
-                <div class="feature-card">
-                    <div class="feature-title">📄 Import rapide</div>
-                    <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
-                </div>
-            </a>
-            """,
-            unsafe_allow_html=True,
-        )
-    with bloc_2:
-        st.markdown(
-            """
-            <a class="feature-link" href="?section=options">
-                <div class="feature-card">
-                    <div class="feature-title">🧹 Nettoyage</div>
-                    <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
-                </div>
-            </a>
-            """,
-            unsafe_allow_html=True,
-        )
-    with bloc_3:
-        st.markdown(
-            """
-            <a class="feature-link" href="?section=exports">
-                <div class="feature-card">
-                    <div class="feature-title">📦 Export</div>
-                    <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
-                </div>
-            </a>
-            """,
+            "<p style='text-align:center;'><a href='?section=accueil'>← Retour à l'accueil</a></p>",
             unsafe_allow_html=True,
         )
 
@@ -470,11 +476,23 @@ def afficher_interface_europresse():
     # Ligne de séparation
     st.markdown("---")
 
-    uploaded_file = None
-    with st.expander("Téléversement", expanded=active_section == "televersement"):
-        uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
+    uploaded_file = st.session_state.get("uploaded_file")
+    processed_data = st.session_state.get("processed_data")
 
-    with st.expander("Options", expanded=active_section == "options"):
+    if active_section == "televersement":
+        st.markdown("## Téléversement")
+        uploaded_file = st.file_uploader(
+            "Téléversez un fichier HTML Europresse",
+            type="html",
+            key="uploaded_file",
+        )
+    elif active_section == "options":
+        st.markdown("## Options")
+        uploaded_file = st.file_uploader(
+            "Téléversez un fichier HTML Europresse",
+            type="html",
+            key="uploaded_file",
+        )
         if uploaded_file:
             if (
                 st.session_state.get("processed_filename")
@@ -569,10 +587,8 @@ def afficher_interface_europresse():
                 st.session_state["processed_filename"] = uploaded_file.name
         else:
             st.info("Téléversez un fichier pour afficher les options de traitement.")
-
-    processed_data = st.session_state.get("processed_data")
-
-    with st.expander("Export", expanded=active_section == "exports"):
+    elif active_section == "exports":
+        st.markdown("## Export")
         if processed_data:
             st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
             texte_final_export = processed_data["texte_final"]
