@@ -5,7 +5,7 @@
 # Site Web : https://www.codeandcortex.fr
 # LinkedIn : https://www.linkedin.com/in/st%C3%A9phane-meurisse-27339055/
 # Date : 31 Décembre 2024
-# Version : 3.1.3
+# Version : 4
 # Licence : Ce programme est un logiciel libre : vous pouvez le redistribuer selon les termes de la Licence Publique Générale GNU v3
 # -----------------------------------------
 
@@ -368,7 +368,7 @@ def afficher_interface_europresse():
     st.markdown("""
         Cette application (no code !) vous permet de convertir facilement des fichiers HTML issus du site Europresse en 
         fichiers texte (.txt et .csv), prêts à être analysés avec le logiciel IRAMUTEQ.
-        Le script (version 3.1.3) effectue un nettoyage du corpus et formate la première ligne de chaque article selon les exigences du
+        Le script (version 4) effectue un nettoyage du corpus et formate la première ligne de chaque article selon les exigences du
         logiciel.
 
         **** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023
