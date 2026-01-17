@@ -351,6 +351,9 @@ def extraire_texte_html(
 
 # Interface Streamlit
 def afficher_interface_europresse():
+    active_section = st.query_params.get("section", "televersement")
+    if isinstance(active_section, list):
+        active_section = active_section[0] if active_section else "televersement"
 
     # Grand titre
     st.markdown(
@@ -395,6 +398,10 @@ def afficher_interface_europresse():
             color: inherit;
             display: block;
         }
+        .feature-link:hover .feature-card {
+            border-color: #ffbda4;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
         .feature-title {
             font-size: 18px;
             font-weight: 600;
@@ -414,7 +421,7 @@ def afficher_interface_europresse():
     with bloc_1:
         st.markdown(
             """
-            <a class="feature-link" href="#televersement">
+            <a class="feature-link" href="?section=televersement">
                 <div class="feature-card">
                     <div class="feature-title">📄 Import rapide</div>
                     <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
@@ -426,7 +433,7 @@ def afficher_interface_europresse():
     with bloc_2:
         st.markdown(
             """
-            <a class="feature-link" href="#options">
+            <a class="feature-link" href="?section=options">
                 <div class="feature-card">
                     <div class="feature-title">🧹 Nettoyage</div>
                     <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
@@ -438,7 +445,7 @@ def afficher_interface_europresse():
     with bloc_3:
         st.markdown(
             """
-            <a class="feature-link" href="#exports">
+            <a class="feature-link" href="?section=exports">
                 <div class="feature-card">
                     <div class="feature-title">📦 Export</div>
                     <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
@@ -463,105 +470,109 @@ def afficher_interface_europresse():
     # Ligne de séparation
     st.markdown("---")
 
-    st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
+    uploaded_file = None
+    with st.expander("Téléversement", expanded=active_section == "televersement"):
+        uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
 
-    if uploaded_file:
-        if (
-            st.session_state.get("processed_filename")
-            and st.session_state.get("processed_filename") != uploaded_file.name
-        ):
-            st.session_state["processed_data"] = None
-            st.session_state["processed_filename"] = None
-        st.markdown('<div id="options"></div>', unsafe_allow_html=True)
-        # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
-        nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
-        date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
-        date_annee_mois_checked = st.checkbox("Inclure la date (année-mois)", value=True)
-        date_annee_checked = st.checkbox("Inclure l'année uniquement", value=True)
-        variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
+    with st.expander("Options", expanded=active_section == "options"):
+        if uploaded_file:
+            if (
+                st.session_state.get("processed_filename")
+                and st.session_state.get("processed_filename") != uploaded_file.name
+            ):
+                st.session_state["processed_data"] = None
+                st.session_state["processed_filename"] = None
+            # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
+            nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
+            date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
+            date_annee_mois_checked = st.checkbox("Inclure la date (année-mois)", value=True)
+            date_annee_checked = st.checkbox("Inclure l'année uniquement", value=True)
+            variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
 
-        # --- Explication des méthodes d'extraction (Markdown)
-        st.markdown("""
-            ### Explication des méthodes d'extraction :
-            - **Méthode normale** : Extraction du nom du journal depuis la balise `div` sans aucun traitement - (On touche à rien et on exporte ! ).
-            - **Méthode clean (conseillée)** : Extraction du nom du journal avec un traitement permettant de raccourcir le nom du journal.
-            """)
+            # --- Explication des méthodes d'extraction (Markdown)
+            st.markdown("""
+                ### Explication des méthodes d'extraction :
+                - **Méthode normale** : Extraction du nom du journal depuis la balise `div` sans aucun traitement - (On touche à rien et on exporte ! ).
+                - **Méthode clean (conseillée)** : Extraction du nom du journal avec un traitement permettant de raccourcir le nom du journal.
+                """)
 
-        methode_extraction = st.radio(
-            "Méthode d'extraction du nom du journal",
-            (0, 1),
-            format_func=lambda x: "Méthode normale" if x == 0 else "Méthode clean"
-        )
-
-        # **NOUVEAU** : bouton radio pour supprimer (ou non) les balises <p> contenant "Edito", "Autre", ...
-        supprimer_balises_radio = st.radio(
-            "Supprimer les balises contenant 'Edito', 'AUTRE',...(Expérimental ! à vos risques et périls !!!)",
-            ("Non", "Oui"),
-            index=0
-        )
-
-        recherche_doublons = st.checkbox("Recherche de doublons")
-        longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
-        if recherche_doublons:
-            longueur_minimale = st.number_input(
-                "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
-                min_value=0,
-                value=LONGUEUR_MINIMALE_PAR_DEFAUT,
-                step=10,
+            methode_extraction = st.radio(
+                "Méthode d'extraction du nom du journal",
+                (0, 1),
+                format_func=lambda x: "Méthode normale" if x == 0 else "Méthode clean"
             )
 
-        if st.button("Lancer le traitement"):
-            # 1) Récupérer le nom de fichier sans extension
-            original_filename = uploaded_file.name  # ex: "mon_fichier.html"
-            base_name, _ = os.path.splitext(original_filename)  # ("mon_fichier", ".html")
-
-            # 2) Extraire le contenu HTML et traiter
-            contenu_html = uploaded_file.getvalue().decode("utf-8")
-            texte_final, data_for_csv, articles_pour_doublons = extraire_texte_html(
-                contenu_html,
-                variable_suppl_texte,
-                nom_journal_checked,
-                date_annee_mois_jour_checked,
-                date_annee_mois_checked,
-                date_annee_checked,
-                methode_extraction,
-                supprimer_balises = (supprimer_balises_radio == "Oui")
+            # **NOUVEAU** : bouton radio pour supprimer (ou non) les balises <p> contenant "Edito", "Autre", ...
+            supprimer_balises_radio = st.radio(
+                "Supprimer les balises contenant 'Edito', 'AUTRE',...(Expérimental ! à vos risques et périls !!!)",
+                ("Non", "Oui"),
+                index=0
             )
 
-            processed_data = {
-                "base_name": base_name,
-                "texte_final": texte_final,
-                "data_for_csv": data_for_csv,
-                "articles_pour_doublons": articles_pour_doublons,
-                "recherche_doublons": recherche_doublons,
-                "longueur_minimale": longueur_minimale,
-            }
-
+            recherche_doublons = st.checkbox("Recherche de doublons")
+            longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
             if recherche_doublons:
-                (
-                    articles_uniques,
-                    articles_doublons,
-                    articles_courts,
-                    ordre_hashes,
-                ) = detecter_doublons_articles(
-                    articles_pour_doublons,
-                    longueur_minimale=longueur_minimale,
-                )
-                processed_data.update(
-                    {
-                        "articles_uniques": articles_uniques,
-                        "articles_doublons": articles_doublons,
-                        "articles_courts": articles_courts,
-                        "ordre_hashes": ordre_hashes,
-                    }
+                longueur_minimale = st.number_input(
+                    "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
+                    min_value=0,
+                    value=LONGUEUR_MINIMALE_PAR_DEFAUT,
+                    step=10,
                 )
 
-            st.session_state["processed_data"] = processed_data
-            st.session_state["processed_filename"] = uploaded_file.name
+            if st.button("Lancer le traitement"):
+                # 1) Récupérer le nom de fichier sans extension
+                original_filename = uploaded_file.name  # ex: "mon_fichier.html"
+                base_name, _ = os.path.splitext(original_filename)  # ("mon_fichier", ".html")
 
-        processed_data = st.session_state.get("processed_data")
+                # 2) Extraire le contenu HTML et traiter
+                contenu_html = uploaded_file.getvalue().decode("utf-8")
+                texte_final, data_for_csv, articles_pour_doublons = extraire_texte_html(
+                    contenu_html,
+                    variable_suppl_texte,
+                    nom_journal_checked,
+                    date_annee_mois_jour_checked,
+                    date_annee_mois_checked,
+                    date_annee_checked,
+                    methode_extraction,
+                    supprimer_balises = (supprimer_balises_radio == "Oui")
+                )
 
+                processed_data = {
+                    "base_name": base_name,
+                    "texte_final": texte_final,
+                    "data_for_csv": data_for_csv,
+                    "articles_pour_doublons": articles_pour_doublons,
+                    "recherche_doublons": recherche_doublons,
+                    "longueur_minimale": longueur_minimale,
+                }
+
+                if recherche_doublons:
+                    (
+                        articles_uniques,
+                        articles_doublons,
+                        articles_courts,
+                        ordre_hashes,
+                    ) = detecter_doublons_articles(
+                        articles_pour_doublons,
+                        longueur_minimale=longueur_minimale,
+                    )
+                    processed_data.update(
+                        {
+                            "articles_uniques": articles_uniques,
+                            "articles_doublons": articles_doublons,
+                            "articles_courts": articles_courts,
+                            "ordre_hashes": ordre_hashes,
+                        }
+                    )
+
+                st.session_state["processed_data"] = processed_data
+                st.session_state["processed_filename"] = uploaded_file.name
+        else:
+            st.info("Téléversez un fichier pour afficher les options de traitement.")
+
+    processed_data = st.session_state.get("processed_data")
+
+    with st.expander("Export", expanded=active_section == "exports"):
         if processed_data:
             st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
             texte_final_export = processed_data["texte_final"]
@@ -664,6 +675,8 @@ def afficher_interface_europresse():
                 file_name=f"{base_name}_outputs.zip",
                 mime="application/zip"
             )
+        else:
+            st.info("Lancez d'abord un traitement pour afficher les exports.")
 
 
 # Injection du script GA après le contenu
