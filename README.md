@@ -4,7 +4,7 @@
 - Contact : stephane.meurisse@gmail.com
 - Site Web : https://www.codeandcortex.fr
 - LinkedIn : https://www.linkedin.com/in/st%C3%A9phane-meurisse-27339055/
-- Date : 1/ janvier 2026
+- Date : 17 janvier 2026
 - Version : 4
 - Licence : Ce programme est un logiciel libre : vous pouvez le redistribuer selon les termes de la Licence Publique Générale GNU v3
 
