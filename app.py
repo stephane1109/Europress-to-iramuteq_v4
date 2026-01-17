@@ -484,8 +484,11 @@ def afficher_interface_europresse():
     st.markdown("---")
 
     st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
+    st.markdown("## Téléversement")
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
+
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
+    st.markdown("## Options")
 
     if uploaded_file:
         if (
@@ -514,211 +517,183 @@ def afficher_interface_europresse():
             format_func=lambda x: "Méthode normale" if x == 0 else "Méthode clean"
         )
 
-    if active_section == "televersement":
-        st.markdown("## Téléversement")
-        uploaded_file = st.file_uploader(
-            "Téléversez un fichier HTML Europresse",
-            type="html",
-            key="uploaded_file",
+        # **NOUVEAU** : bouton radio pour supprimer (ou non) les balises <p> contenant "Edito", "Autre", ...
+        supprimer_balises_radio = st.radio(
+            "Supprimer les balises contenant 'Edito', 'AUTRE',...(Expérimental ! à vos risques et périls !!!)",
+            ("Non", "Oui"),
+            index=0
         )
-    elif active_section == "options":
-        st.markdown("## Options")
-        uploaded_file = st.file_uploader(
-            "Téléversez un fichier HTML Europresse",
-            type="html",
-            key="uploaded_file",
-        )
-        if uploaded_file:
-            if (
-                st.session_state.get("processed_filename")
-                and st.session_state.get("processed_filename") != uploaded_file.name
-            ):
-                st.session_state["processed_data"] = None
-                st.session_state["processed_filename"] = None
-            # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
-            nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
-            date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
-            date_annee_mois_checked = st.checkbox("Inclure la date (année-mois)", value=True)
-            date_annee_checked = st.checkbox("Inclure l'année uniquement", value=True)
-            variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
 
-            # --- Explication des méthodes d'extraction (Markdown)
-            st.markdown("""
-                ### Explication des méthodes d'extraction :
-                - **Méthode normale** : Extraction du nom du journal depuis la balise `div` sans aucun traitement - (On touche à rien et on exporte ! ).
-                - **Méthode clean (conseillée)** : Extraction du nom du journal avec un traitement permettant de raccourcir le nom du journal.
-                """)
-
-            methode_extraction = st.radio(
-                "Méthode d'extraction du nom du journal",
-                (0, 1),
-                format_func=lambda x: "Méthode normale" if x == 0 else "Méthode clean"
+        recherche_doublons = st.checkbox("Recherche de doublons")
+        longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
+        if recherche_doublons:
+            longueur_minimale = st.number_input(
+                "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
+                min_value=0,
+                value=LONGUEUR_MINIMALE_PAR_DEFAUT,
+                step=10,
             )
 
-            # **NOUVEAU** : bouton radio pour supprimer (ou non) les balises <p> contenant "Edito", "Autre", ...
-            supprimer_balises_radio = st.radio(
-                "Supprimer les balises contenant 'Edito', 'AUTRE',...(Expérimental ! à vos risques et périls !!!)",
-                ("Non", "Oui"),
-                index=0
+        contenu_html = uploaded_file.read()
+        if isinstance(contenu_html, bytes):
+            contenu_html = contenu_html.decode("utf-8", errors="replace")
+
+        base_name = os.path.splitext(uploaded_file.name)[0]
+        texte_final, data_for_csv, articles_pour_doublons = extraire_texte_html(
+            contenu_html,
+            variable_suppl_texte,
+            nom_journal_checked,
+            date_annee_mois_jour_checked,
+            date_annee_mois_checked,
+            date_annee_checked,
+            methode_extraction,
+            supprimer_balises=supprimer_balises_radio == "Oui",
+        )
+
+        processed_data = {
+            "base_name": base_name,
+            "texte_final": texte_final,
+            "data_for_csv": data_for_csv,
+            "articles_pour_doublons": articles_pour_doublons,
+            "recherche_doublons": recherche_doublons,
+            "longueur_minimale": longueur_minimale,
+        }
+
+        if recherche_doublons:
+            (
+                articles_uniques,
+                articles_doublons,
+                articles_courts,
+                ordre_hashes,
+            ) = detecter_doublons_articles(
+                articles_pour_doublons,
+                longueur_minimale=longueur_minimale,
             )
-
-            recherche_doublons = st.checkbox("Recherche de doublons")
-            longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
-            if recherche_doublons:
-                longueur_minimale = st.number_input(
-                    "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
-                    min_value=0,
-                    value=LONGUEUR_MINIMALE_PAR_DEFAUT,
-                    step=10,
-                )
-
-            st.session_state["processed_data"] = processed_data
-            st.session_state["processed_filename"] = uploaded_file.name
-
-        processed_data = st.session_state.get("processed_data")
-        st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
-
-                processed_data = {
-                    "base_name": base_name,
-                    "texte_final": texte_final,
-                    "data_for_csv": data_for_csv,
-                    "articles_pour_doublons": articles_pour_doublons,
-                    "recherche_doublons": recherche_doublons,
-                    "longueur_minimale": longueur_minimale,
+            processed_data.update(
+                {
+                    "articles_uniques": articles_uniques,
+                    "articles_doublons": articles_doublons,
+                    "articles_courts": articles_courts,
+                    "ordre_hashes": ordre_hashes,
                 }
-
-                if recherche_doublons:
-                    (
-                        articles_uniques,
-                        articles_doublons,
-                        articles_courts,
-                        ordre_hashes,
-                    ) = detecter_doublons_articles(
-                        articles_pour_doublons,
-                        longueur_minimale=longueur_minimale,
-                    )
-                    processed_data.update(
-                        {
-                            "articles_uniques": articles_uniques,
-                            "articles_doublons": articles_doublons,
-                            "articles_courts": articles_courts,
-                            "ordre_hashes": ordre_hashes,
-                        }
-                    )
-
-                st.session_state["processed_data"] = processed_data
-                st.session_state["processed_filename"] = uploaded_file.name
-        else:
-            st.info("Téléversez un fichier pour afficher les options de traitement.")
-    elif active_section == "exports":
-        st.markdown("## Export")
-        if processed_data:
-            st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
-            texte_final_export = processed_data["texte_final"]
-            data_for_csv_export = processed_data["data_for_csv"]
-            base_name = processed_data["base_name"]
-
-            if processed_data["recherche_doublons"]:
-                articles_doublons = processed_data["articles_doublons"]
-                articles_courts = processed_data["articles_courts"]
-
-                st.markdown("### Résultats de la recherche de doublons")
-                st.write(f"Nombre d'articles en double : {len(articles_doublons)}")
-                st.write(f"Nombre d'articles trop courts : {len(articles_courts)}")
-
-                with st.expander("Voir les articles en double"):
-                    if articles_doublons:
-                        for index, article in enumerate(articles_doublons, start=1):
-                            st.text_area(
-                                f"Doublon {index}",
-                                value=extraire_apercu(article, 300),
-                                height=120,
-                                key=f"doublon_{index}",
-                            )
-                    else:
-                        st.write("Aucun doublon détecté.")
-
-                with st.expander("Voir les articles trop courts"):
-                    if articles_courts:
-                        for index, article in enumerate(articles_courts, start=1):
-                            st.text_area(
-                                f"Article court {index}",
-                                value=extraire_apercu(article, 300),
-                                height=120,
-                                key=f"court_{index}",
-                            )
-                    else:
-                        st.write("Aucun article trop court détecté.")
-
-                exporter_sans_doublons = st.checkbox(
-                    "Exporter le corpus sans doublons"
-                )
-                exporter_sans_courts = st.checkbox(
-                    "Exporter le corpus sans les articles trop courts"
-                )
-
-                articles_export = processed_data["articles_pour_doublons"]
-                if exporter_sans_doublons:
-                    articles_export = [
-                        processed_data["articles_uniques"][h]
-                        for h in processed_data["ordre_hashes"]
-                    ]
-
-                if exporter_sans_courts:
-                    longueur_minimale = processed_data["longueur_minimale"]
-                    articles_export = [
-                        article
-                        for article in articles_export
-                        if compter_mots(article["corps"]) >= longueur_minimale
-                    ]
-
-                if exporter_sans_doublons or exporter_sans_courts:
-                    texte_final_export = reconstruire_texte(articles_export)
-                    data_for_csv_export = [article["csv"] for article in articles_export]
-
-            # 3) Créer un fichier CSV en mémoire
-            csv_buffer = StringIO()
-            writer = csv.DictWriter(csv_buffer,
-                                    fieldnames=['Journal', 'Année-mois-jour', 'Année-mois', 'Année', 'Article'])
-            writer.writeheader()
-            for row in data_for_csv_export:
-                writer.writerow(row)
-
-            # *** Nouveau : Créer un fichier Excel (.xlsx) en mémoire ***
-            df = pd.DataFrame(data_for_csv_export)
-            excel_buffer = BytesIO()
-            with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer_xlsx:
-                df.to_excel(writer_xlsx, index=False)
-            excel_buffer.seek(0)  # Remet le curseur au début du buffer
-
-            # 4) Construire un ZIP contenant le .txt, le .csv et le .xlsx
-            zip_buffer = BytesIO()
-            with zipfile.ZipFile(zip_buffer, "w") as zf:
-                # Nommer les fichiers .txt, .csv et .xlsx comme le fichier HTML initial
-                zf.writestr(f"{base_name}.txt", texte_final_export)
-                zf.writestr(f"{base_name}.csv", csv_buffer.getvalue())
-                zf.writestr(f"{base_name}.xlsx", excel_buffer.getvalue())
-
-            # 5) Afficher un aperçu du texte final
-            st.markdown("### Aperçu du corpus traité")
-            st.text_area(
-                label="",
-                value=texte_final_export,
-                height=300
             )
 
-            # 6) Proposer le téléchargement du ZIP
-            st.download_button(
-                "Télécharger les fichiers (ZIP)",
-                data=zip_buffer.getvalue(),
-                file_name=f"{base_name}_outputs.zip",
-                mime="application/zip"
+        st.session_state["processed_data"] = processed_data
+        st.session_state["processed_filename"] = uploaded_file.name
+    else:
+        st.info("Téléversez un fichier pour afficher les options de traitement.")
+
+    processed_data = st.session_state.get("processed_data")
+    st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
+    st.markdown("## Export")
+    if processed_data:
+        texte_final_export = processed_data["texte_final"]
+        data_for_csv_export = processed_data["data_for_csv"]
+        base_name = processed_data["base_name"]
+
+        if processed_data["recherche_doublons"]:
+            articles_doublons = processed_data["articles_doublons"]
+            articles_courts = processed_data["articles_courts"]
+
+            st.markdown("### Résultats de la recherche de doublons")
+            st.write(f"Nombre d'articles en double : {len(articles_doublons)}")
+            st.write(f"Nombre d'articles trop courts : {len(articles_courts)}")
+
+            with st.expander("Voir les articles en double"):
+                if articles_doublons:
+                    for index, article in enumerate(articles_doublons, start=1):
+                        st.text_area(
+                            f"Doublon {index}",
+                            value=extraire_apercu(article, 300),
+                            height=120,
+                            key=f"doublon_{index}",
+                        )
+                else:
+                    st.write("Aucun doublon détecté.")
+
+            with st.expander("Voir les articles trop courts"):
+                if articles_courts:
+                    for index, article in enumerate(articles_courts, start=1):
+                        st.text_area(
+                            f"Article court {index}",
+                            value=extraire_apercu(article, 300),
+                            height=120,
+                            key=f"court_{index}",
+                        )
+                else:
+                    st.write("Aucun article trop court détecté.")
+
+            exporter_sans_doublons = st.checkbox(
+                "Exporter le corpus sans doublons"
             )
-        else:
-            st.info("Lancez d'abord un traitement pour afficher les exports.")
+            exporter_sans_courts = st.checkbox(
+                "Exporter le corpus sans les articles trop courts"
+            )
+
+            articles_export = processed_data["articles_pour_doublons"]
+            if exporter_sans_doublons:
+                articles_export = [
+                    processed_data["articles_uniques"][h]
+                    for h in processed_data["ordre_hashes"]
+                ]
+
+            if exporter_sans_courts:
+                longueur_minimale = processed_data["longueur_minimale"]
+                articles_export = [
+                    article
+                    for article in articles_export
+                    if compter_mots(article["corps"]) >= longueur_minimale
+                ]
+
+            if exporter_sans_doublons or exporter_sans_courts:
+                texte_final_export = reconstruire_texte(articles_export)
+                data_for_csv_export = [article["csv"] for article in articles_export]
+
+        # 3) Créer un fichier CSV en mémoire
+        csv_buffer = StringIO()
+        writer = csv.DictWriter(
+            csv_buffer,
+            fieldnames=['Journal', 'Année-mois-jour', 'Année-mois', 'Année', 'Article']
+        )
+        writer.writeheader()
+        for row in data_for_csv_export:
+            writer.writerow(row)
+
+        # *** Nouveau : Créer un fichier Excel (.xlsx) en mémoire ***
+        df = pd.DataFrame(data_for_csv_export)
+        excel_buffer = BytesIO()
+        with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer_xlsx:
+            df.to_excel(writer_xlsx, index=False)
+        excel_buffer.seek(0)  # Remet le curseur au début du buffer
+
+        # 4) Construire un ZIP contenant le .txt, le .csv et le .xlsx
+        zip_buffer = BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            # Nommer les fichiers .txt, .csv et .xlsx comme le fichier HTML initial
+            zf.writestr(f"{base_name}.txt", texte_final_export)
+            zf.writestr(f"{base_name}.csv", csv_buffer.getvalue())
+            zf.writestr(f"{base_name}.xlsx", excel_buffer.getvalue())
+
+        # 5) Afficher un aperçu du texte final
+        st.markdown("### Aperçu du corpus traité")
+        st.text_area(
+            label="",
+            value=texte_final_export,
+            height=300
+        )
+
+        # 6) Proposer le téléchargement du ZIP
+        st.download_button(
+            "Télécharger les fichiers (ZIP)",
+            data=zip_buffer.getvalue(),
+            file_name=f"{base_name}_outputs.zip",
+            mime="application/zip"
+        )
+    else:
+        st.info("Lancez d'abord un traitement pour afficher les exports.")
 
 
-# Injection du script GA après le contenu
+    # Injection du script GA après le contenu
     GA_CODE = """
         <div style="display: none;">
             <!-- Google Analytics -->
