@@ -351,10 +351,6 @@ def extraire_texte_html(
 
 # Interface Streamlit
 def afficher_interface_europresse():
-    active_section = st.query_params.get("section", "accueil")
-    if isinstance(active_section, list):
-        active_section = active_section[0] if active_section else "accueil"
-
     # Grand titre
     st.markdown(
         "<h1 style='text-align: center; font-size: 44px; margin-bottom: 0px; color: #FF5733;'>Europresse to IRaMuTeQ</h1>",
@@ -393,15 +389,6 @@ def afficher_interface_europresse():
             flex-direction: column;
             justify-content: center;
         }
-        .feature-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        .feature-link:hover .feature-card {
-            border-color: #ffbda4;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-        }
         .feature-title {
             font-size: 18px;
             font-weight: 600;
@@ -412,54 +399,74 @@ def afficher_interface_europresse():
             color: #5a5a5a;
             margin: 0;
         }
+        .menu-inline {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 10px 0 20px;
+            flex-wrap: wrap;
+        }
+        .menu-inline a {
+            background: #ffffff;
+            border: 1px solid #ffd9c9;
+            color: #ff5733;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .menu-inline a:hover {
+            border-color: #ffbda4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    if active_section == "accueil":
-        bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
-        with bloc_1:
-            st.markdown(
-                """
-                <a class="feature-link" href="?section=televersement">
-                    <div class="feature-card">
-                        <div class="feature-title">📄 Import rapide</div>
-                        <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
-                    </div>
-                </a>
-                """,
-                unsafe_allow_html=True,
-            )
-        with bloc_2:
-            st.markdown(
-                """
-                <a class="feature-link" href="?section=options">
-                    <div class="feature-card">
-                        <div class="feature-title">🧹 Nettoyage</div>
-                        <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
-                    </div>
-                </a>
-                """,
-                unsafe_allow_html=True,
-            )
-        with bloc_3:
-            st.markdown(
-                """
-                <a class="feature-link" href="?section=exports">
-                    <div class="feature-card">
-                        <div class="feature-title">📦 Export</div>
-                        <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
-                    </div>
-                </a>
-                """,
-                unsafe_allow_html=True,
-            )
-    else:
+    bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
+    with bloc_1:
         st.markdown(
-            "<p style='text-align:center;'><a href='?section=accueil'>← Retour à l'accueil</a></p>",
+            """
+            <div class="feature-card">
+                <div class="feature-title">📄 Import rapide</div>
+                <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
+    with bloc_2:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">🧹 Nettoyage</div>
+                <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with bloc_3:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">📦 Export</div>
+                <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        """
+        <div class="menu-inline">
+            <a href="#televersement">Téléversement</a>
+            <a href="#options">Options</a>
+            <a href="#exports">Export</a>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     # Lien vers votre site (en petit)
     st.markdown(
@@ -476,8 +483,36 @@ def afficher_interface_europresse():
     # Ligne de séparation
     st.markdown("---")
 
-    uploaded_file = st.session_state.get("uploaded_file")
-    processed_data = st.session_state.get("processed_data")
+    st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
+    st.markdown('<div id="options"></div>', unsafe_allow_html=True)
+
+    if uploaded_file:
+        if (
+            st.session_state.get("processed_filename")
+            and st.session_state.get("processed_filename") != uploaded_file.name
+        ):
+            st.session_state["processed_data"] = None
+            st.session_state["processed_filename"] = None
+        # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
+        nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
+        date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
+        date_annee_mois_checked = st.checkbox("Inclure la date (année-mois)", value=True)
+        date_annee_checked = st.checkbox("Inclure l'année uniquement", value=True)
+        variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
+
+        # --- Explication des méthodes d'extraction (Markdown)
+        st.markdown("""
+            ### Explication des méthodes d'extraction :
+            - **Méthode normale** : Extraction du nom du journal depuis la balise `div` sans aucun traitement - (On touche à rien et on exporte ! ).
+            - **Méthode clean (conseillée)** : Extraction du nom du journal avec un traitement permettant de raccourcir le nom du journal.
+            """)
+
+        methode_extraction = st.radio(
+            "Méthode d'extraction du nom du journal",
+            (0, 1),
+            format_func=lambda x: "Méthode normale" if x == 0 else "Méthode clean"
+        )
 
     if active_section == "televersement":
         st.markdown("## Téléversement")
@@ -537,23 +572,11 @@ def afficher_interface_europresse():
                     step=10,
                 )
 
-            if st.button("Lancer le traitement"):
-                # 1) Récupérer le nom de fichier sans extension
-                original_filename = uploaded_file.name  # ex: "mon_fichier.html"
-                base_name, _ = os.path.splitext(original_filename)  # ("mon_fichier", ".html")
+            st.session_state["processed_data"] = processed_data
+            st.session_state["processed_filename"] = uploaded_file.name
 
-                # 2) Extraire le contenu HTML et traiter
-                contenu_html = uploaded_file.getvalue().decode("utf-8")
-                texte_final, data_for_csv, articles_pour_doublons = extraire_texte_html(
-                    contenu_html,
-                    variable_suppl_texte,
-                    nom_journal_checked,
-                    date_annee_mois_jour_checked,
-                    date_annee_mois_checked,
-                    date_annee_checked,
-                    methode_extraction,
-                    supprimer_balises = (supprimer_balises_radio == "Oui")
-                )
+        processed_data = st.session_state.get("processed_data")
+        st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
 
                 processed_data = {
                     "base_name": base_name,
