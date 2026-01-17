@@ -514,67 +514,62 @@ def afficher_interface_europresse():
             format_func=lambda x: "Méthode normale" if x == 0 else "Méthode clean"
         )
 
-        # **NOUVEAU** : bouton radio pour supprimer (ou non) les balises <p> contenant "Edito", "Autre", ...
-        supprimer_balises_radio = st.radio(
-            "Supprimer les balises contenant 'Edito', 'AUTRE',...(Expérimental ! à vos risques et périls !!!)",
-            ("Non", "Oui"),
-            index=0
+    if active_section == "televersement":
+        st.markdown("## Téléversement")
+        uploaded_file = st.file_uploader(
+            "Téléversez un fichier HTML Europresse",
+            type="html",
+            key="uploaded_file",
         )
+    elif active_section == "options":
+        st.markdown("## Options")
+        uploaded_file = st.file_uploader(
+            "Téléversez un fichier HTML Europresse",
+            type="html",
+            key="uploaded_file",
+        )
+        if uploaded_file:
+            if (
+                st.session_state.get("processed_filename")
+                and st.session_state.get("processed_filename") != uploaded_file.name
+            ):
+                st.session_state["processed_data"] = None
+                st.session_state["processed_filename"] = None
+            # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
+            nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
+            date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
+            date_annee_mois_checked = st.checkbox("Inclure la date (année-mois)", value=True)
+            date_annee_checked = st.checkbox("Inclure l'année uniquement", value=True)
+            variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
 
-        recherche_doublons = st.checkbox("Recherche de doublons")
-        longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
-        if recherche_doublons:
-            longueur_minimale = st.number_input(
-                "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
-                min_value=0,
-                value=LONGUEUR_MINIMALE_PAR_DEFAUT,
-                step=10,
+            # --- Explication des méthodes d'extraction (Markdown)
+            st.markdown("""
+                ### Explication des méthodes d'extraction :
+                - **Méthode normale** : Extraction du nom du journal depuis la balise `div` sans aucun traitement - (On touche à rien et on exporte ! ).
+                - **Méthode clean (conseillée)** : Extraction du nom du journal avec un traitement permettant de raccourcir le nom du journal.
+                """)
+
+            methode_extraction = st.radio(
+                "Méthode d'extraction du nom du journal",
+                (0, 1),
+                format_func=lambda x: "Méthode normale" if x == 0 else "Méthode clean"
             )
 
-        if st.button("Lancer le traitement"):
-            # 1) Récupérer le nom de fichier sans extension
-            original_filename = uploaded_file.name  # ex: "mon_fichier.html"
-            base_name, _ = os.path.splitext(original_filename)  # ("mon_fichier", ".html")
-
-            # 2) Extraire le contenu HTML et traiter
-            contenu_html = uploaded_file.getvalue().decode("utf-8")
-            texte_final, data_for_csv, articles_pour_doublons = extraire_texte_html(
-                contenu_html,
-                variable_suppl_texte,
-                nom_journal_checked,
-                date_annee_mois_jour_checked,
-                date_annee_mois_checked,
-                date_annee_checked,
-                methode_extraction,
-                supprimer_balises = (supprimer_balises_radio == "Oui")
+            # **NOUVEAU** : bouton radio pour supprimer (ou non) les balises <p> contenant "Edito", "Autre", ...
+            supprimer_balises_radio = st.radio(
+                "Supprimer les balises contenant 'Edito', 'AUTRE',...(Expérimental ! à vos risques et périls !!!)",
+                ("Non", "Oui"),
+                index=0
             )
 
-            processed_data = {
-                "base_name": base_name,
-                "texte_final": texte_final,
-                "data_for_csv": data_for_csv,
-                "articles_pour_doublons": articles_pour_doublons,
-                "recherche_doublons": recherche_doublons,
-                "longueur_minimale": longueur_minimale,
-            }
-
+            recherche_doublons = st.checkbox("Recherche de doublons")
+            longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
             if recherche_doublons:
-                (
-                    articles_uniques,
-                    articles_doublons,
-                    articles_courts,
-                    ordre_hashes,
-                ) = detecter_doublons_articles(
-                    articles_pour_doublons,
-                    longueur_minimale=longueur_minimale,
-                )
-                processed_data.update(
-                    {
-                        "articles_uniques": articles_uniques,
-                        "articles_doublons": articles_doublons,
-                        "articles_courts": articles_courts,
-                        "ordre_hashes": ordre_hashes,
-                    }
+                longueur_minimale = st.number_input(
+                    "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
+                    min_value=0,
+                    value=LONGUEUR_MINIMALE_PAR_DEFAUT,
+                    step=10,
                 )
 
             st.session_state["processed_data"] = processed_data
@@ -583,7 +578,42 @@ def afficher_interface_europresse():
         processed_data = st.session_state.get("processed_data")
         st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
 
+                processed_data = {
+                    "base_name": base_name,
+                    "texte_final": texte_final,
+                    "data_for_csv": data_for_csv,
+                    "articles_pour_doublons": articles_pour_doublons,
+                    "recherche_doublons": recherche_doublons,
+                    "longueur_minimale": longueur_minimale,
+                }
+
+                if recherche_doublons:
+                    (
+                        articles_uniques,
+                        articles_doublons,
+                        articles_courts,
+                        ordre_hashes,
+                    ) = detecter_doublons_articles(
+                        articles_pour_doublons,
+                        longueur_minimale=longueur_minimale,
+                    )
+                    processed_data.update(
+                        {
+                            "articles_uniques": articles_uniques,
+                            "articles_doublons": articles_doublons,
+                            "articles_courts": articles_courts,
+                            "ordre_hashes": ordre_hashes,
+                        }
+                    )
+
+                st.session_state["processed_data"] = processed_data
+                st.session_state["processed_filename"] = uploaded_file.name
+        else:
+            st.info("Téléversez un fichier pour afficher les options de traitement.")
+    elif active_section == "exports":
+        st.markdown("## Export")
         if processed_data:
+            st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
             texte_final_export = processed_data["texte_final"]
             data_for_csv_export = processed_data["data_for_csv"]
             base_name = processed_data["base_name"]
@@ -684,6 +714,8 @@ def afficher_interface_europresse():
                 file_name=f"{base_name}_outputs.zip",
                 mime="application/zip"
             )
+        else:
+            st.info("Lancez d'abord un traitement pour afficher les exports.")
 
 
 # Injection du script GA après le contenu
