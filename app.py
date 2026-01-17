@@ -27,6 +27,7 @@ import streamlit.components.v1 as components
 from datetime import datetime
 from doublons import (
     LONGUEUR_MINIMALE_PAR_DEFAUT,
+    compter_mots,
     detecter_doublons_articles,
     reconstruire_texte,
     extraire_apercu,
@@ -542,7 +543,7 @@ def afficher_interface_europresse():
                     articles_export = [
                         article
                         for article in articles_export
-                        if len(article["corps"]) >= longueur_minimale
+                        if compter_mots(article["corps"]) >= longueur_minimale
                     ]
 
                 if exporter_sans_doublons or exporter_sans_courts:
