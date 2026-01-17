@@ -431,7 +431,7 @@ def afficher_interface_europresse():
         st.markdown(
             """
             <div class="feature-card">
-                <div class="feature-title">📄 Import rapide</div>
+                <div class="feature-title">Import rapide</div>
                 <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
             </div>
             """,
@@ -441,7 +441,7 @@ def afficher_interface_europresse():
         st.markdown(
             """
             <div class="feature-card">
-                <div class="feature-title">🧹 Nettoyage</div>
+                <div class="feature-title">Nettoyage</div>
                 <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
             </div>
             """,
@@ -451,7 +451,7 @@ def afficher_interface_europresse():
         st.markdown(
             """
             <div class="feature-card">
-                <div class="feature-title">📦 Export</div>
+                <div class="feature-title">Export</div>
                 <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
             </div>
             """,
