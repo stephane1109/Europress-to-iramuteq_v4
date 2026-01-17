@@ -492,7 +492,7 @@ def afficher_interface_europresse():
             unsafe_allow_html=True,
         )
 
-    st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="height:26px;"></div>', unsafe_allow_html=True)
 
     # Lien vers votre site (en petit)
     st.markdown(
