@@ -395,6 +395,12 @@ def afficher_interface_europresse():
             font-weight: 600;
             margin-bottom: 6px;
         }
+        .feature-title img {
+            display: block;
+            height: 32px;
+            margin: 6px auto 0;
+            width: 32px;
+        }
         .feature-desc {
             font-size: 14px;
             color: #5a5a5a;
@@ -441,7 +447,7 @@ def afficher_interface_europresse():
         st.markdown(
             """
             <div class="feature-card">
-                <div class="feature-title">Nettoyage</div>
+                <div class="feature-title">Nettoyage<img src="options.png" alt="Options"></div>
                 <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
             </div>
             """,
