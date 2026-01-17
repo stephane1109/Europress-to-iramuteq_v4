@@ -394,6 +394,7 @@ def afficher_interface_europresse():
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 6px;
+            color: #ff5733;
         }
         .feature-title img {
             display: block;
