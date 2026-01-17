@@ -351,7 +351,6 @@ def extraire_texte_html(
 
 # Interface Streamlit
 def afficher_interface_europresse():
-
     # Grand titre
     st.markdown(
         "<h1 style='text-align: center; font-size: 44px; margin-bottom: 0px; color: #FF5733;'>Europresse to IRaMuTeQ</h1>",
@@ -375,6 +374,100 @@ def afficher_interface_europresse():
         **** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023
          """)
 
+    st.markdown(
+        """
+        <style>
+        .feature-card {
+            background: #fff7f2;
+            border: 1px solid #ffd9c9;
+            border-radius: 14px;
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .feature-desc {
+            font-size: 14px;
+            color: #5a5a5a;
+            margin: 0;
+        }
+        .menu-inline {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 10px 0 20px;
+            flex-wrap: wrap;
+        }
+        .menu-inline a {
+            background: #ffffff;
+            border: 1px solid #ffd9c9;
+            color: #ff5733;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .menu-inline a:hover {
+            border-color: #ffbda4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
+    with bloc_1:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">📄 Import rapide</div>
+                <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with bloc_2:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">🧹 Nettoyage</div>
+                <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with bloc_3:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">📦 Export</div>
+                <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        """
+        <div class="menu-inline">
+            <a href="#televersement">Téléversement</a>
+            <a href="#options">Options</a>
+            <a href="#exports">Export</a>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     # Lien vers votre site (en petit)
     st.markdown(
         """
@@ -390,7 +483,9 @@ def afficher_interface_europresse():
     # Ligne de séparation
     st.markdown("---")
 
+    st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
+    st.markdown('<div id="options"></div>', unsafe_allow_html=True)
 
     if uploaded_file:
         if (
@@ -486,6 +581,7 @@ def afficher_interface_europresse():
             st.session_state["processed_filename"] = uploaded_file.name
 
         processed_data = st.session_state.get("processed_data")
+        st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
 
         if processed_data:
             texte_final_export = processed_data["texte_final"]
