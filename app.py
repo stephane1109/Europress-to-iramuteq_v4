@@ -457,17 +457,6 @@ def afficher_interface_europresse():
             unsafe_allow_html=True,
         )
 
-    st.markdown(
-        """
-        <div class="menu-inline">
-            <a href="#televersement">Téléversement</a>
-            <a href="#options">Options</a>
-            <a href="#exports">Export</a>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
     # Lien vers votre site (en petit)
     st.markdown(
         """
