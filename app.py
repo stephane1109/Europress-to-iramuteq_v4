@@ -429,7 +429,7 @@ def afficher_interface_europresse():
         longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
         if recherche_doublons:
             longueur_minimale = st.number_input(
-                "Longueur minimale des articles (pour signaler les articles trop courts)",
+                "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
                 min_value=0,
                 value=LONGUEUR_MINIMALE_PAR_DEFAUT,
                 step=10,
