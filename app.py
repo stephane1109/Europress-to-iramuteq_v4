@@ -375,6 +375,79 @@ def afficher_interface_europresse():
         **** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023
          """)
 
+    st.markdown(
+        """
+        <style>
+        .feature-card {
+            background: #fff7f2;
+            border: 1px solid #ffd9c9;
+            border-radius: 14px;
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .feature-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .feature-desc {
+            font-size: 14px;
+            color: #5a5a5a;
+            margin: 0;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
+    with bloc_1:
+        st.markdown(
+            """
+            <a class="feature-link" href="#televersement">
+                <div class="feature-card">
+                    <div class="feature-title">📄 Import rapide</div>
+                    <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
+                </div>
+            </a>
+            """,
+            unsafe_allow_html=True,
+        )
+    with bloc_2:
+        st.markdown(
+            """
+            <a class="feature-link" href="#options">
+                <div class="feature-card">
+                    <div class="feature-title">🧹 Nettoyage</div>
+                    <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
+                </div>
+            </a>
+            """,
+            unsafe_allow_html=True,
+        )
+    with bloc_3:
+        st.markdown(
+            """
+            <a class="feature-link" href="#exports">
+                <div class="feature-card">
+                    <div class="feature-title">📦 Export</div>
+                    <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
+                </div>
+            </a>
+            """,
+            unsafe_allow_html=True,
+        )
+
     # Lien vers votre site (en petit)
     st.markdown(
         """
@@ -390,6 +463,7 @@ def afficher_interface_europresse():
     # Ligne de séparation
     st.markdown("---")
 
+    st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
 
     if uploaded_file:
@@ -399,6 +473,7 @@ def afficher_interface_europresse():
         ):
             st.session_state["processed_data"] = None
             st.session_state["processed_filename"] = None
+        st.markdown('<div id="options"></div>', unsafe_allow_html=True)
         # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
         nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
         date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
@@ -488,6 +563,7 @@ def afficher_interface_europresse():
         processed_data = st.session_state.get("processed_data")
 
         if processed_data:
+            st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
             texte_final_export = processed_data["texte_final"]
             data_for_csv_export = processed_data["data_for_csv"]
             base_name = processed_data["base_name"]
