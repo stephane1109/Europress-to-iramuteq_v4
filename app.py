@@ -354,7 +354,7 @@ def extraire_texte_html(
 def afficher_interface_europresse():
     # Grand titre
     st.markdown(
-        "<h1 style='text-align: center; font-size: 44px; margin-bottom: 0px; color: #FF5733;'>Europresse to IRaMuTeQ</h1>",
+        "<h1 style='text-align: center; font-size: 44px; margin-bottom: 0px; color: ##ff1f00;'>Europresse to IRaMuTeQ</h1>",
         unsafe_allow_html=True
     )
 
@@ -465,8 +465,8 @@ def afficher_interface_europresse():
         st.markdown(
             f"""
             <div class="feature-card">
-                <div class="feature-title">Import rapide{telechargement_icon_html}</div>
-                <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
+                <div class="feature-title">Import{telechargement_icon_html}</div>
+                <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -476,7 +476,7 @@ def afficher_interface_europresse():
             f"""
             <div class="feature-card">
                 <div class="feature-title">Nettoyage{options_icon_html}</div>
-                <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
+                <p class="feature-desc">Suppression des balises</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -486,7 +486,7 @@ def afficher_interface_europresse():
             f"""
             <div class="feature-card">
                 <div class="feature-title">Export{export_icon_html}</div>
-                <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
+                <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse</p>
             </div>
             """,
             unsafe_allow_html=True,
