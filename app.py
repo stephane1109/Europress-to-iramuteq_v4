@@ -465,7 +465,7 @@ def afficher_interface_europresse():
         st.markdown(
             f"""
             <div class="feature-card">
-                <div class="feature-title">Import rapide{telechargement_icon_html}</div>
+                <div class="feature-title">Import{telechargement_icon_html}</div>
                 <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse</p>
             </div>
             """,
