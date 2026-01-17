@@ -432,6 +432,15 @@ def afficher_interface_europresse():
         unsafe_allow_html=True,
     )
 
+    options_icon_path = os.path.join(os.path.dirname(__file__), "options.png")
+    options_icon_html = ""
+    if os.path.exists(options_icon_path):
+        with open(options_icon_path, "rb") as icon_file:
+            encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
+        options_icon_html = (
+            f'<img src="data:image/png;base64,{encoded_icon}" alt="Options" />'
+        )
+
     bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
     with bloc_1:
         st.markdown(
@@ -445,9 +454,9 @@ def afficher_interface_europresse():
         )
     with bloc_2:
         st.markdown(
-            """
+            f"""
             <div class="feature-card">
-                <div class="feature-title">Nettoyage<img src="options.png" alt="Options"></div>
+                <div class="feature-title">Nettoyage{options_icon_html}</div>
                 <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
             </div>
             """,
@@ -499,14 +508,10 @@ def afficher_interface_europresse():
     uploaded_file = st.file_uploader("Déposer un fichier HTML Europresse", type="html")
 
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
-    options_icon_path = os.path.join(os.path.dirname(__file__), "options.png")
-    options_icon_html = ""
-    if os.path.exists(options_icon_path):
-        with open(options_icon_path, "rb") as icon_file:
-            encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
-        options_icon_html = (
-            f'<img src="data:image/png;base64,{encoded_icon}" '
-            'alt="Options" style="width:32px;height:32px;" />'
+    if options_icon_html:
+        options_icon_html = options_icon_html.replace(
+            'alt="Options"',
+            'alt="Options" style="width:32px;height:32px;"',
         )
     options_header_html = (
         f'<div style="display:flex;align-items:center;gap:8px;">'
