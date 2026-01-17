@@ -375,6 +375,64 @@ def afficher_interface_europresse():
         **** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023
          """)
 
+    st.markdown(
+        """
+        <style>
+        .feature-card {
+            background: #fff7f2;
+            border: 1px solid #ffd9c9;
+            border-radius: 14px;
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .feature-desc {
+            font-size: 14px;
+            color: #5a5a5a;
+            margin: 0;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
+    with bloc_1:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">📄 Import rapide</div>
+                <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with bloc_2:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">🧹 Nettoyage</div>
+                <p class="feature-desc">Suppression des balises et format IRaMuTeQ.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with bloc_3:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-title">📦 Export</div>
+                <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
     # Lien vers votre site (en petit)
     st.markdown(
         """
