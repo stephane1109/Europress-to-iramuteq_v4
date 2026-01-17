@@ -354,7 +354,7 @@ def extraire_texte_html(
 def afficher_interface_europresse():
     # Grand titre
     st.markdown(
-        "<h1 style='text-align: center; font-size: 44px; margin-bottom: 0px; color: ##FF1f00;'>Europresse to IRaMuTeQ</h1>",
+        "<h1 style='text-align: center; font-size: 44px; margin-bottom: 0px; color: #ff1f00;'>Europresse to IRaMuTeQ</h1>",
         unsafe_allow_html=True
     )
 
