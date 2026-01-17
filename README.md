@@ -26,6 +26,59 @@ L'exploitation commerciale de ce projet est interdite sans autorisation.
 - Export au format texte et CSV.
 
 -----------------------------------------
+### Fonctionnement du script (règles et options)
+
+Cette application Streamlit lit un fichier HTML exporté depuis Europresse, extrait chaque article, nettoie le contenu et construit
+un corpus compatible IRaMuTeQ. Les sorties sont générées en **TXT**, **CSV** et **XLSX** (dans un ZIP). Les règles principales sont
+décrites ci-dessous.
+
+#### 1) Détection et parsing des dates
+- La fonction `parser_date` convertit une date française (ex. `31 décembre 2024`) ou anglaise (ex. `June 13, 2024`) en objet `datetime`.【F:app.py†L28-L67】
+- Un dictionnaire mappe les mois français vers les mois anglais pour permettre l’usage de `datetime.strptime`.【F:app.py†L28-L39】
+- Les dates sont ensuite converties en trois formats IRaMuTeQ :
+  - `*date_YYYY-MM-DD` (année-mois-jour),
+  - `*am_YYYY-MM` (année-mois),
+  - `*annee_YYYY` (année).【F:app.py†L137-L145】
+
+#### 2) Extraction du nom du journal
+- Le nom du journal est récupéré dans `div.rdp__DocPublicationName > span.DocPublicationName`.【F:app.py†L88-L124】
+- Il est normalisé via `nettoyer_nom_journal` :
+  - suppression de tout ce qui suit une virgule,
+  - remplacement des espaces/apostrophes par `_`,
+  - préfixe `*source_` pour IRaMuTeQ.【F:app.py†L69-L75】
+- Deux méthodes existent :
+  - **Méthode normale (0)** : extraction directe du texte (formatage minimal),
+  - **Méthode clean (1)** : extraction par liste de fragments (`stripped_strings`) pour éviter des résidus de mise en forme.【F:app.py†L106-L128】【F:app.py†L425-L436】
+
+#### 3) Extraction et nettoyage du contenu article
+Pour chaque `<article>` :
+- Le texte brut est récupéré via `article.get_text` puis nettoyé. Les sections non pertinentes (header, aside, footer, images, liens)
+  sont supprimées. Des balises `<i>` et `<em>` sont conservées mais déroulées (unwrap).【F:app.py†L87-L220】
+- Option **expérimentale** : suppression conditionnelle de blocs contenant des rubriques (ex. “Edito”, “Opinions”, “Débats”, etc.).【F:app.py†L161-L189】【F:app.py†L438-L442】
+- Le titre est conservé dans le texte final (pas de suppression de la balise titre).【F:app.py†L147-L158】
+- Les mentions de journal/date brut sont retirées du texte (`re.sub`).【F:app.py†L226-L246】
+- Les sauts de lignes sont aplatis, les URLs “(lien : …)” sont retirées, et la première ligne reçoit un point final si besoin.【F:app.py†L251-L278】
+
+#### 4) En-tête IRaMuTeQ et construction du corpus
+- Chaque article est précédé d’une ligne “étoilée” commençant par `****`, puis des variables (`*source_`, `*date_`, `*am_`,
+  `*annee_`, variable utilisateur).【F:app.py†L284-L307】
+- Le corpus final est la concaténation des articles avec un saut de ligne entre chaque bloc.【F:app.py†L310-L315】
+
+#### 5) Détection des doublons (optionnel)
+- Activée via “Recherche de doublons”.
+- Un hash SHA-256 est calculé sur le corps de chaque article pour identifier les doublons. Le plus long article est conservé si
+  deux articles partagent le même hash.【F:doublons.py†L11-L36】
+- Les articles “trop courts” sont listés si leur nombre de mots est inférieur au seuil configurable (300 mots par défaut).【F:doublons.py†L4-L37】
+- L’utilisateur peut exporter un corpus sans doublons et/ou sans articles courts. Le texte est reconstruit à partir des articles
+  retenus.【F:app.py†L485-L522】【F:doublons.py†L40-L45】
+
+#### 6) Exports générés
+- **TXT** : corpus IRaMuTeQ complet.
+- **CSV** : colonnes `Journal`, `Année-mois-jour`, `Année-mois`, `Année`, `Article`.【F:app.py†L524-L533】
+- **XLSX** : export Excel des mêmes colonnes (via pandas).【F:app.py†L536-L541】
+- Les trois fichiers sont empaquetés dans un ZIP, nommé à partir du fichier HTML d’origine.【F:app.py†L544-L551】
+
+-----------------------------------------
 ### Utilisation
 1. Rendez-vous sur l'application [Europresse to IRaMuTeQ] : https://europresse-to-iramuteq.streamlit.app/
 2. Glissez-déposez vos fichiers HTML pour les traiter.
