@@ -18,6 +18,7 @@ import os
 import re
 import html
 import csv
+import base64
 import pandas as pd
 from bs4 import BeautifulSoup
 import streamlit as st
@@ -457,17 +458,6 @@ def afficher_interface_europresse():
             unsafe_allow_html=True,
         )
 
-    st.markdown(
-        """
-        <div class="menu-inline">
-            <a href="#televersement">Téléversement</a>
-            <a href="#options">Options</a>
-            <a href="#exports">Export</a>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
     # Lien vers votre site (en petit)
     st.markdown(
         """
@@ -484,7 +474,22 @@ def afficher_interface_europresse():
     st.markdown("---")
 
     st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
-    st.markdown("## Téléversement")
+    televersement_icon_path = os.path.join(os.path.dirname(__file__), "telechargement.png")
+    televersement_icon_html = ""
+    if os.path.exists(televersement_icon_path):
+        with open(televersement_icon_path, "rb") as icon_file:
+            encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
+        televersement_icon_html = (
+            f'<img src="data:image/png;base64,{encoded_icon}" '
+            'alt="Téléversement" style="width:32px;height:32px;" />'
+        )
+    televersement_header_html = (
+        f'<div style="display:flex;align-items:center;gap:8px;">'
+        f'{televersement_icon_html}'
+        '<h2 style="margin:0;">Upload</h2>'
+        '</div>'
+    )
+    st.markdown(televersement_header_html, unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
 
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
