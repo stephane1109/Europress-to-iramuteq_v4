@@ -365,7 +365,10 @@ def afficher_interface_europresse():
     )
 
     # Ligne de séparation
-    st.markdown("---")
+    st.markdown(
+        '<hr style="margin-top:8px;margin-bottom:0;">',
+        unsafe_allow_html=True,
+    )
     st.markdown("""
         Cette application (no code !) vous permet de convertir facilement des fichiers HTML issus du site Europresse en 
         fichiers texte (.txt et .csv), prêts à être analysés avec le logiciel IRAMUTEQ.
@@ -507,7 +510,10 @@ def afficher_interface_europresse():
     )
 
     # Ligne de séparation
-    st.markdown("---")
+    st.markdown(
+        '<hr style="margin-top:8px;margin-bottom:0;">',
+        unsafe_allow_html=True,
+    )
 
     st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
     televersement_icon_path = os.path.join(os.path.dirname(__file__), "telechargement.png")
