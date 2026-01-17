@@ -441,12 +441,30 @@ def afficher_interface_europresse():
             f'<img src="data:image/png;base64,{encoded_icon}" alt="Options" />'
         )
 
+    telechargement_icon_path = os.path.join(os.path.dirname(__file__), "telechargement.png")
+    telechargement_icon_html = ""
+    if os.path.exists(telechargement_icon_path):
+        with open(telechargement_icon_path, "rb") as icon_file:
+            encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
+        telechargement_icon_html = (
+            f'<img src="data:image/png;base64,{encoded_icon}" alt="Téléchargement" />'
+        )
+
+    export_icon_path = os.path.join(os.path.dirname(__file__), "export.png")
+    export_icon_html = ""
+    if os.path.exists(export_icon_path):
+        with open(export_icon_path, "rb") as icon_file:
+            encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
+        export_icon_html = (
+            f'<img src="data:image/png;base64,{encoded_icon}" alt="Export" />'
+        )
+
     bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
     with bloc_1:
         st.markdown(
-            """
+            f"""
             <div class="feature-card">
-                <div class="feature-title">Import rapide</div>
+                <div class="feature-title">Import rapide{telechargement_icon_html}</div>
                 <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse.</p>
             </div>
             """,
@@ -464,9 +482,9 @@ def afficher_interface_europresse():
         )
     with bloc_3:
         st.markdown(
-            """
+            f"""
             <div class="feature-card">
-                <div class="feature-title">Export</div>
+                <div class="feature-title">Export{export_icon_html}</div>
                 <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse.</p>
             </div>
             """,
