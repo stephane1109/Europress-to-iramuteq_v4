@@ -493,7 +493,22 @@ def afficher_interface_europresse():
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
 
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
-    st.markdown("## Options")
+    options_icon_path = os.path.join(os.path.dirname(__file__), "options.png")
+    options_icon_html = ""
+    if os.path.exists(options_icon_path):
+        with open(options_icon_path, "rb") as icon_file:
+            encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
+        options_icon_html = (
+            f'<img src="data:image/png;base64,{encoded_icon}" '
+            'alt="Options" style="width:32px;height:32px;" />'
+        )
+    options_header_html = (
+        f'<div style="display:flex;align-items:center;gap:8px;">'
+        f'{options_icon_html}'
+        '<h2 style="margin:0;">Options</h2>'
+        '</div>'
+    )
+    st.markdown(options_header_html, unsafe_allow_html=True)
 
     if uploaded_file:
         if (
