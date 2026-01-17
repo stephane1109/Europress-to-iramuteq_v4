@@ -473,7 +473,13 @@ def afficher_interface_europresse():
     st.markdown("---")
 
     st.markdown('<div id="televersement"></div>', unsafe_allow_html=True)
-    st.markdown("## Téléversement")
+    telechargement_icon_path = os.path.join(os.path.dirname(__file__), "telechargement.png")
+    televersement_icon_col, televersement_title_col = st.columns([1, 12])
+    with televersement_icon_col:
+        if os.path.exists(telechargement_icon_path):
+            st.image(telechargement_icon_path, width=32)
+    with televersement_title_col:
+        st.markdown("## Téléversement")
     uploaded_file = st.file_uploader("Téléversez un fichier HTML Europresse", type="html")
 
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
