@@ -492,15 +492,10 @@ def afficher_interface_europresse():
             unsafe_allow_html=True,
         )
 
-    # Ligne de séparation
-    st.markdown(
-        '<hr style="margin-top:2px;margin-bottom:0;">',
-        unsafe_allow_html=True,
-    )
     
-    # st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
 
-    # Lien vers votre site (en petit)
+    # Lien web
     st.markdown(
         """
         <p style="font-size:14px;">
