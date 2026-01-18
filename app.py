@@ -198,16 +198,13 @@ def extraire_texte_html(
         # --------------------------------------------------------------------
         titre_article = ""
         chapeau_article = ""
-        p_titre = article.find("p", class_="sm-margin-TopNews titreArticleVisu rdp__articletitle")
+        p_titre = article.select_one("p.sm-margin-TopNews.titreArticleVisu.rdp__articletitle")
         if p_titre:
             titre_article = p_titre.get_text(strip=True)
             # On ne le decompose() pas, on le laisse dans le DOM pour le get_text() final
             # Mais on pourrait stocker son texte si on veut le retravailler.
 
-        p_chapeau = article.find(
-            "p",
-            class_=["sm-margin-TopNews", "rdp__subtitle"],
-        )
+        p_chapeau = article.select_one("p.sm-margin-TopNews.rdp__subtitle")
         if p_chapeau:
             chapeau_article = p_chapeau.get_text(" ", strip=True)
 
