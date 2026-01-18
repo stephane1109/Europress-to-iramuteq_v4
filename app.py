@@ -383,80 +383,11 @@ def afficher_interface_europresse():
     st.markdown(
         textwrap.dedent(
             """
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-        :root {
-            --primary-color: #FF4B4B;
-            --bg-color: #ffffff;
-            --card-bg: #f9f9f9;
-            --text-color: #31333F;
-            --desc-color: #555e6d;
-            --border-color: #e0e0e0;
-        }
-        .streamlit-apps {
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-        }
         .block-container {
             max-width: 100%;
             padding-left: 2rem;
             padding-right: 2rem;
-        }
-        .streamlit-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 0 auto;
-            max-width: 1200px;
-            width: 100%;
-        }
-        .app-card {
-            aspect-ratio: 4 / 3;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-color);
-            transition: all 0.3s ease;
-            padding: 8px;
-            box-sizing: border-box;
-            position: relative;
-            text-align: center;
-            min-height: 140px;
-        }
-        .app-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary-color);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-            background-color: #fff;
-        }
-        .app-card i {
-            font-size: 1.25rem;
-            margin-bottom: 6px;
-            color: var(--primary-color);
-        }
-        .app-card .app-title {
-            font-size: 0.72rem;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 3px;
-        }
-        .app-card .app-desc {
-            font-size: 0.6rem;
-            font-weight: 400;
-            color: var(--desc-color);
-            line-height: 1.3;
-        }
-        @media (max-width: 1024px) {
-            .streamlit-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .streamlit-grid { grid-template-columns: 1fr; }
-            .app-card { aspect-ratio: auto; padding: 14px; min-height: auto; }
         }
         </style>
         """
@@ -482,33 +413,111 @@ def afficher_interface_europresse():
             f'<img src="data:image/png;base64,{encoded_icon}" alt="Export" />'
         )
 
-    st.markdown(
+    components.html(
         textwrap.dedent(
             """
-        <div class="streamlit-apps">
+        <div class="container">
             <div class="streamlit-grid">
-                <div class="app-card">
+                <a href="URL_APP_1" class="app-card" target="_blank">
                     <i class="fas fa-chart-line"></i>
                     <span class="app-title">Analyse Financière</span>
                     <span class="app-desc">Suivi en temps réel des marchés boursiers.</span>
-                </div>
+                </a>
 
-                <div class="app-card">
+                <a href="URL_APP_2" class="app-card" target="_blank">
                     <i class="fas fa-robot"></i>
                     <span class="app-title">Assistant NLP</span>
                     <span class="app-desc">Analyse de sentiments sur des textes volumineux.</span>
-                </div>
+                </a>
 
-                <div class="app-card">
+                <a href="URL_APP_3" class="app-card" target="_blank">
                     <i class="fas fa-flask"></i>
                     <span class="app-title">Data Science Lab</span>
                     <span class="app-desc">Visualisation interactive de jeux de données.</span>
-                </div>
+                </a>
             </div>
         </div>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+        :root {
+            --primary-color: #FF4B4B;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --text-color: #31333F;
+            --desc-color: #555e6d;
+            --border-color: #e0e0e0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            background-color: transparent;
+        }
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 10px 0 0;
+        }
+        .streamlit-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .app-card {
+            aspect-ratio: 1 / 1;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            padding: 16px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .app-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        .app-card i {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+        }
+        .app-card .app-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .app-card .app-desc {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--desc-color);
+            line-height: 1.3;
+        }
+        @media (max-width: 1024px) {
+            .streamlit-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .streamlit-grid { grid-template-columns: 1fr; }
+            .app-card { aspect-ratio: auto; padding: 24px; }
+        }
+        </style>
         """
         ),
-        unsafe_allow_html=True,
+        height=360,
     )
 
     
