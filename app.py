@@ -454,6 +454,12 @@ def afficher_interface_europresse():
                     <span class="app-title">Exports</span>
                     <span class="app-desc">fichiers .txt .csv .xlxs</span>
                 </a>
+
+                <a href="aide.md" class="app-card" target="_blank">
+                    <i class="fas fa-circle-question"></i>
+                    <span class="app-title">Aide</span>
+                    <span class="app-desc">Consulter le guide d'utilisation</span>
+                </a>
             </div>
         </div>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -484,7 +490,7 @@ def afficher_interface_europresse():
         }
         .streamlit-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
         }
         .app-card {
@@ -527,7 +533,7 @@ def afficher_interface_europresse():
             color: var(--desc-color);
             line-height: 1.3;
         }
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .streamlit-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 600px) {
