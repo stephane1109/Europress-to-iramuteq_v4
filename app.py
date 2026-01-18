@@ -398,27 +398,11 @@ def afficher_interface_europresse():
         Possibilité d'exporter l'article ou de selectionner uniquement le titres et le chapô.
          """)
 
-    st.markdown(
-        textwrap.dedent(
-            """
-        <style>
-        .block-container {
-            max-width: 100%;
-            padding-left: 2rem;
-            padding-right: 2rem;
-        }
-        </style>
-        """
-        ),
-        unsafe_allow_html=True,
-    )
-
-        # Lien web
+    # Lien web
     st.markdown(
         """
         <p style="font-size:16px;">
             Consultez mon site où je partage des contenus autour de l'analyse de texte, de la data science et du NLP. 
-            
             Si vous avez des questions, des retours ou des suggestions, n'hésitez pas à me contacter. 
             <a href="https://www.codeandcortex.fr" target="_blank">codeandxortex.fr</a>
         </p>
