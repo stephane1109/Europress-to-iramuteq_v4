@@ -535,7 +535,7 @@ def afficher_interface_europresse():
         '</div>'
     )
     st.markdown(televersement_header_html, unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Déposer un fichier HTML Europresse", type="html")
+    uploaded_file = st.file_uploader("Importer un fichier HTML Europresse", type="html")
 
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
     if options_icon_html:
@@ -642,7 +642,7 @@ def afficher_interface_europresse():
         st.session_state["processed_data"] = processed_data
         st.session_state["processed_filename"] = uploaded_file.name
     else:
-        st.info("Téléversez un fichier pour afficher les options de traitement.")
+        st.info("Importez un fichier pour afficher les options de traitement.")
 
     processed_data = st.session_state.get("processed_data")
     st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
