@@ -80,6 +80,71 @@ def nettoyer_nom_journal(nom_journal):
     nom_journal_nettoye = f"*source_{nom_journal_sans_numero}"
     return nom_journal_nettoye
 
+TERMES_A_SUPPRIMER_PAR_DEFAUT = [
+    "Edito",
+    "AUTRE",
+    "Opinions",
+    "La chronique",
+    "Le point de vue",
+    "ANTICIPATION",
+    "Tech",
+    "Une-ECO",
+    "spécial ia france",
+    "Le figaro santé",
+    "Débats",
+    "Portrait",
+    "Enquête",
+    "Chronique Etranger",
+    "repères",
+    "Société",
+    "La vie des entreprises",
+    "Rencontre",
+    "L'HISTOIRE",
+    "Éthique",
+    "SANTÉ PUBLIQUE",
+    "Idées/",
+    "Billet",
+    "Economie & Entreprise",
+    "Cinéma",
+    "Question du jour",
+    "Médecine",
+    "Internet",
+    "Reportage",
+    "International",
+    "ÉVÉNEMENT",
+    "Le Figaro et vous",
+    "Religion",
+    "Premiere Page",
+    "_Faits divers",
+    "40TOUTES",
+    "RODEZ_CP",
+    "France",
+    "Politique",
+    "Sciences et Santé",
+    "_Politique",
+    "Le fait du jour",
+    "Actualité ; Société",
+    "AFP",
+    "CONTRE-POINT",
+    "Une",
+    "Économie",
+    "u FRANCE",
+    "Expresso ",
+    "Images/",
+    "Histoire littéraire",
+    "France",
+    "Le Monde des Livres",
+    "Opinions",
+    "critiques",
+    "Télévision",
+    "Interieur FigaroPlus",
+    "Le Monde Science et médecine",
+    "CANNEs/",
+    "_Société",
+    "_Le Fait du jour",
+    "IDÉES",
+]
+
 def extraire_texte_html(
         contenu_html,
         variable_suppl_texte,
@@ -89,7 +154,9 @@ def extraire_texte_html(
         date_annee_checked,
         methode_extraction,
         mode_contenu,
-        supprimer_balises=False  # par défaut False because expérimental
+        supprimer_balises=False,  # par défaut False because expérimental
+        termes_supplementaires=None,
+        regex_suppression=None,
     ):
 
     soup = BeautifulSoup(contenu_html, 'html.parser')
@@ -213,25 +280,22 @@ def extraire_texte_html(
 
         # Le dico
         if supprimer_balises:
-            termes_a_supprimer = ["Edito", "AUTRE", "Opinions", "La chronique", "Le point de vue", "ANTICIPATION", "Tech",
-                         "Une-ECO", "spécial ia france", "Le figaro santé", "Débats", "Portrait", "Enquête",
-                         "Chronique Etranger", "repères", "Société", "La vie des entreprises", "Rencontre",
-                         "L'HISTOIRE", "Éthique", "SANTÉ PUBLIQUE", "Idées/", "Billet", "Economie & Entreprise", "Cinéma",
-                         "Question du jour", "Médecine", "Internet", "Reportage", "International", "ÉVÉNEMENT",
-                         "Le Figaro et vous", "Religion", "Premiere Page", "_Faits divers", "40TOUTES", "RODEZ_CP",
-                         "France", "Politique", "Sciences et Santé", "_Politique", "Le fait du jour", "Actualité ; Société",
-                         "AFP", "CONTRE-POINT", "Une", "Économie", "u FRANCE", "Expresso ", "Images/", "Histoire littéraire",
-                         "France", "Le Monde des Livres", "Opinions", "critiques", "Télévision", "Interieur FigaroPlus",
-                         "Le Monde Science et médecine", "CANNEs/", "_Société", "_Le Fait du jour", "IDÉES"]  # Liste des termes spécifiques à supprimer
+            termes_a_supprimer = list(TERMES_A_SUPPRIMER_PAR_DEFAUT)
+            if termes_supplementaires:
+                termes_a_supprimer.extend(termes_supplementaires)
 
             for p_tag in article.find_all("p", class_="sm-margin-bottomNews"):
                 texte_p = p_tag.get_text(strip=True)
-                if any(terme.lower() in texte_p.lower() for terme in termes_a_supprimer):
+                if any(terme.lower() in texte_p.lower() for terme in termes_a_supprimer) or (
+                    regex_suppression and regex_suppression.search(texte_p)
+                ):
                     p_tag.decompose()
 
             for div_tag in article.find_all("div"):
                 texte_div = div_tag.get_text(strip=True)
-                if any(terme.lower() == texte_div.lower() for terme in termes_a_supprimer):
+                if any(terme.lower() == texte_div.lower() for terme in termes_a_supprimer) or (
+                    regex_suppression and regex_suppression.search(texte_div)
+                ):
                     div_tag.decompose()
 
 
@@ -502,6 +566,38 @@ def afficher_interface_europresse():
             ("Non", "Oui"),
             index=0
         )
+        termes_supplementaires = []
+        regex_suppression = None
+        if supprimer_balises_radio == "Oui":
+            with st.expander("Voir le dictionnaire des termes supprimés"):
+                st.text_area(
+                    "Termes supprimés par défaut",
+                    value="\n".join(sorted(TERMES_A_SUPPRIMER_PAR_DEFAUT)),
+                    height=200,
+                    disabled=True,
+                )
+            termes_supplementaires_brut = st.text_area(
+                "Ajouter des mots/expressions à supprimer (séparés par des virgules ou retours à la ligne)",
+                value="",
+            )
+            regex_suppression_brut = st.text_input(
+                "Regex additionnelle (optionnelle) pour filtrer davantage",
+                value="",
+                placeholder="Ex: ^Le Figaro",
+            )
+            if termes_supplementaires_brut:
+                termes_supplementaires = [
+                    terme.strip()
+                    for bloc in termes_supplementaires_brut.splitlines()
+                    for terme in bloc.split(",")
+                    if terme.strip()
+                ]
+            if regex_suppression_brut:
+                try:
+                    regex_suppression = re.compile(regex_suppression_brut, flags=re.IGNORECASE)
+                except re.error as exc:
+                    st.warning(f"Regex invalide ignorée : {exc}")
+                    regex_suppression = None
 
         mode_contenu_label = st.radio(
             "Contenu à exporter",
@@ -541,6 +637,8 @@ def afficher_interface_europresse():
             methode_extraction,
             mode_contenu,
             supprimer_balises=supprimer_balises_radio == "Oui",
+            termes_supplementaires=termes_supplementaires,
+            regex_suppression=regex_suppression,
         )
 
         processed_data = {
