@@ -204,28 +204,12 @@ def extraire_texte_html(
             # On ne le decompose() pas, on le laisse dans le DOM pour le get_text() final
             # Mais on pourrait stocker son texte si on veut le retravailler.
 
-        header = article.find("header")
-        if header:
-            b_tag = header.find("b")
-            if b_tag:
-                p_tag = b_tag.find("p")
-                if p_tag:
-                    chapeau_article = p_tag.get_text(" ", strip=True)
-
-            if not chapeau_article:
-                for p_tag in header.find_all("p"):
-                    classes = p_tag.get("class", [])
-                    if (
-                        "sm-margin-bottomNews" in classes
-                        or "sm-margin-TopNews" in classes
-                        or "titreArticleVisu" in classes
-                        or "rdp__articletitle" in classes
-                    ):
-                        continue
-                    texte_p = p_tag.get_text(" ", strip=True)
-                    if texte_p:
-                        chapeau_article = texte_p
-                        break
+        p_chapeau = article.find(
+            "p",
+            class_=["sm-margin-TopNews", "rdp__subtitle"],
+        )
+        if p_chapeau:
+            chapeau_article = p_chapeau.get_text(" ", strip=True)
 
         # --------------------------------------------------------------------
         # 6) NETTOYAGE DU DOM (aside, footer,...)
