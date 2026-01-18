@@ -89,6 +89,7 @@ def extraire_texte_html(
         date_annee_mois_checked,
         date_annee_checked,
         methode_extraction,
+        mode_contenu,
         supprimer_balises=False  # par défaut False because expérimental
     ):
 
@@ -193,14 +194,19 @@ def extraire_texte_html(
                 annee_formattee = date_obj.strftime('*annee_%Y')  # ex: *annee_2023
 
         # --------------------------------------------------------------------
-        # 5) TITRE : on le veut dans le corps final, donc on ne le supprime pas
+        # 5) TITRE & CHAPEAU : on le veut dans le corps final, donc on ne le supprime pas
         # --------------------------------------------------------------------
         titre_article = ""
-        p_titre = article.find("p", class_="sm-margin-TopNews titreArticleVisu rdp__articletitle")
+        chapeau_article = ""
+        p_titre = article.select_one("p.sm-margin-TopNews.titreArticleVisu.rdp__articletitle")
         if p_titre:
             titre_article = p_titre.get_text(strip=True)
             # On ne le decompose() pas, on le laisse dans le DOM pour le get_text() final
             # Mais on pourrait stocker son texte si on veut le retravailler.
+
+        p_chapeau = article.select_one("p.sm-margin-TopNews.rdp__subtitle")
+        if p_chapeau:
+            chapeau_article = p_chapeau.get_text(" ", strip=True)
 
         # --------------------------------------------------------------------
         # 6) NETTOYAGE DU DOM (aside, footer,...)
@@ -260,8 +266,16 @@ def extraire_texte_html(
         # --------------------------------------------------------------------
         # 7) EXTRAIRE LE TEXTE FINAL
         # --------------------------------------------------------------------
-        texte_article = article.get_text("\n", strip=True)
-        # Le "\n" dans get_text() permet d’éviter que tout soit sur une seule ligne.
+        if mode_contenu == "titre":
+            texte_article = titre_article
+        elif mode_contenu == "chapeau":
+            texte_article = chapeau_article
+        elif mode_contenu == "titre_chapeau":
+            morceaux = [texte for texte in [titre_article, chapeau_article] if texte]
+            texte_article = "\n".join(morceaux)
+        else:
+            texte_article = article.get_text("\n", strip=True)
+            # Le "\n" dans get_text() permet d’éviter que tout soit sur une seule ligne.
 
         # --------------------------------------------------------------------
         # 8) SUPPRIMER LE JOURNAL + DATE BRUTS DU TEXTE, tout en gardant le titre
@@ -611,6 +625,19 @@ def afficher_interface_europresse():
             index=0
         )
 
+        mode_contenu_label = st.radio(
+            "Contenu à exporter",
+            ("Texte complet", "Titre uniquement", "Chapeau uniquement", "Titre + chapeau"),
+            index=0,
+        )
+        mode_contenu_map = {
+            "Texte complet": "texte",
+            "Titre uniquement": "titre",
+            "Chapeau uniquement": "chapeau",
+            "Titre + chapeau": "titre_chapeau",
+        }
+        mode_contenu = mode_contenu_map[mode_contenu_label]
+
         recherche_doublons = st.checkbox("Recherche de doublons")
         longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
         if recherche_doublons:
@@ -634,6 +661,7 @@ def afficher_interface_europresse():
             date_annee_mois_checked,
             date_annee_checked,
             methode_extraction,
+            mode_contenu,
             supprimer_balises=supprimer_balises_radio == "Oui",
         )
 
