@@ -366,7 +366,7 @@ def afficher_interface_europresse():
 
     # Ligne de séparation
     st.markdown(
-        '<hr style="margin-top:2px;margin-bottom:0;">',
+        '<hr style="margin-top:2px;margin-bottom:2;">',
         unsafe_allow_html=True,
     )
     st.markdown("""
@@ -469,7 +469,6 @@ def afficher_interface_europresse():
             f"""
             <div class="feature-card">
                 <div class="feature-title">Import{telechargement_icon_html}</div>
-                <p class="feature-desc">Glissez-déposez vos fichiers HTML Europresse</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -479,7 +478,6 @@ def afficher_interface_europresse():
             f"""
             <div class="feature-card">
                 <div class="feature-title">Nettoyage{options_icon_html}</div>
-                <p class="feature-desc">Suppression des balises</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -489,13 +487,18 @@ def afficher_interface_europresse():
             f"""
             <div class="feature-card">
                 <div class="feature-title">Export{export_icon_html}</div>
-                <p class="feature-desc">TXT, CSV et XLSX prêts à l'analyse</p>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
+    # Ligne de séparation
+    st.markdown(
+        '<hr style="margin-top:2px;margin-bottom:0;">',
+        unsafe_allow_html=True,
+    )
+    
+    # st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
 
     # Lien vers votre site (en petit)
     st.markdown(
