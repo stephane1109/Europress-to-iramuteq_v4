@@ -401,9 +401,14 @@ def afficher_interface_europresse():
         }
         .feature-title img {
             display: block;
-            height: 32px;
-            margin: 6px auto 0;
-            width: 32px;
+            height: 48px;
+            margin: 8px auto 0;
+            width: 48px;
+        }
+        .feature-title img.feature-icon--import {
+            height: 64px;
+            margin-top: 10px;
+            width: 64px;
         }
         .feature-desc {
             font-size: 14px;
@@ -451,7 +456,8 @@ def afficher_interface_europresse():
         with open(telechargement_icon_path, "rb") as icon_file:
             encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
         telechargement_icon_html = (
-            f'<img src="data:image/png;base64,{encoded_icon}" alt="Importation" />'
+            f'<img src="data:image/png;base64,{encoded_icon}" '
+            f'alt="Importation" class="feature-icon--import" />'
         )
 
     export_icon_path = os.path.join(os.path.dirname(__file__), "export.png")
