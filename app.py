@@ -386,12 +386,16 @@ def afficher_interface_europresse():
     )
     st.markdown("""
         Cette application (no code !) vous permet de convertir facilement des fichiers HTML issus du site Europresse en 
-        fichiers texte (.txt et .csv), prêts à être analysés avec le logiciel IRaMuTEQ  `**** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023`.
+        fichiers texte (.txt et .csv), prêts à être analysés avec le logiciel IRaMuTEQ.  `**** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023`.
 
         Le script (version 4) effectue un nettoyage du corpus et formate la première ligne de chaque article selon les exigences du
-        logiciel une options permet également de rechercher des articles en double (print vs web d'un même journal). 
+        logiciel `**** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023`.
         
-        Une option a été ajoutée pour filtres les articles trops court.
+        Une (nouvelle) option permet également de rechercher des articles en double (print vs web d'un même journal par exemple). 
+        
+        Autre (nouvelle) option : Un filtrage des articles trops court.
+
+        Possibilité d'exporter l'article ou de selectionner uniquement le titres et le chapô.
 
          """)
 
@@ -410,6 +414,18 @@ def afficher_interface_europresse():
         unsafe_allow_html=True,
     )
 
+        # Lien web
+    st.markdown(
+        """
+        <p style="font-size:16px;">
+            Consultez mon site où je partage des contenus autour de l'analyse de texte, de la data science et du NLP. 
+            Si vous avez des questions, des retours ou des suggestions, n'hésitez pas à me contacter. 
+            <a href="https://www.codeandcortex.fr" target="_blank">codeandxortex.fr</a>
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
     options_icon_path = os.path.join(os.path.dirname(__file__), "options.png")
     options_icon_html = ""
     if os.path.exists(options_icon_path):
@@ -425,22 +441,10 @@ def afficher_interface_europresse():
         with open(export_icon_path, "rb") as icon_file:
             encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
         export_icon_html = (
-            f'<img src="data:image/png;base64,{encoded_icon}" alt="Export" />'
+            f'<img src="data:image/png;base64,{encoded_icon}" alt="Exports" />'
         )
 
     st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
-
-    # Lien web
-    st.markdown(
-        """
-        <p style="font-size:16px;">
-            Consultez mon site où je partage des contenus autour de l'analyse de texte, de la data science et du NLP. 
-            Si vous avez des questions, des retours ou des suggestions, n'hésitez pas à me contacter. 
-            <a href="https://www.codeandcortex.fr" target="_blank">codeandxortex.fr</a>
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
 
     # Ligne de séparation
     st.markdown(
@@ -456,7 +460,7 @@ def afficher_interface_europresse():
             encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
         televersement_icon_html = (
             f'<img src="data:image/png;base64,{encoded_icon}" '
-            'alt="Téléchargement" style="width:32px;height:32px;" />'
+            'alt="Import" style="width:32px;height:32px;" />'
         )
     televersement_header_html = (
         f'<div style="display:flex;align-items:center;gap:8px;">'
