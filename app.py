@@ -381,29 +381,37 @@ def afficher_interface_europresse():
     st.markdown(
         """
         <style>
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            align-items: stretch;
+        }
         .feature-card {
             background: #fff7f2;
             border: 1px solid #ffd9c9;
             border-radius: 14px;
-            padding: 18px 16px;
+            padding: 20px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            height: 150px;
+            aspect-ratio: 1 / 1;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
+            gap: 12px;
+            box-sizing: border-box;
         }
         .feature-title {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 6px;
             color: #ff1f00;
         }
-        .feature-title img {
+        .feature-icon {
             display: block;
-            height: 32px;
-            margin: 6px auto 0;
-            width: 32px;
+            height: 256px;
+            width: 256px;
+            margin: 0 auto;
         }
         .feature-desc {
             font-size: 14px;
@@ -463,34 +471,25 @@ def afficher_interface_europresse():
             f'<img src="data:image/png;base64,{encoded_icon}" alt="Export" />'
         )
 
-    bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
-    with bloc_1:
-        st.markdown(
-            f"""
+    st.markdown(
+        f"""
+        <div class="feature-grid">
             <div class="feature-card">
-                <div class="feature-title">Import{telechargement_icon_html}</div>
+                <div class="feature-title">Import</div>
+                {telechargement_icon_html.replace('<img ', '<img class="feature-icon" ')}
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with bloc_2:
-        st.markdown(
-            f"""
             <div class="feature-card">
-                <div class="feature-title">Nettoyage{options_icon_html}</div>
+                <div class="feature-title">Nettoyage</div>
+                {options_icon_html.replace('<img ', '<img class="feature-icon" ')}
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with bloc_3:
-        st.markdown(
-            f"""
             <div class="feature-card">
-                <div class="feature-title">Export{export_icon_html}</div>
+                <div class="feature-title">Export</div>
+                {export_icon_html.replace('<img ', '<img class="feature-icon" ')}
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     
     st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
