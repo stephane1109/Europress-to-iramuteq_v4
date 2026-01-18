@@ -491,8 +491,8 @@ def afficher_interface_europresse():
             gap: 16px;
         }
         .app-card {
-            width: 300px;
-            height: 300px;
+            width: 250px;
+            height: 250px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 15px;
