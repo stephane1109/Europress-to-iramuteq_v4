@@ -1,4 +1,4 @@
-# Aide (minimaliste)
+# Aide
 
 ## Fonctions (code)
 
