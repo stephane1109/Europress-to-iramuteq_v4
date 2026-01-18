@@ -366,7 +366,7 @@ def afficher_interface_europresse():
 
     # Ligne de séparation
     st.markdown(
-        '<hr style="margin-top:2px;margin-bottom:2;">',
+        '<hr style="margin-top:2px;margin-bottom:1;">',
         unsafe_allow_html=True,
     )
     st.markdown("""
@@ -451,7 +451,7 @@ def afficher_interface_europresse():
         with open(telechargement_icon_path, "rb") as icon_file:
             encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
         telechargement_icon_html = (
-            f'<img src="data:image/png;base64,{encoded_icon}" alt="Téléchargement" />'
+            f'<img src="data:image/png;base64,{encoded_icon}" alt="Importation" />'
         )
 
     export_icon_path = os.path.join(os.path.dirname(__file__), "export.png")
