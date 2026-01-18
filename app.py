@@ -35,6 +35,7 @@ from doublons import (
     extraire_apercu,
 )
 
+st.set_page_config(layout="wide")
 
 # -----------------------------------------
 # 1) DICTIONNAIRE POUR LES DATES
