@@ -427,7 +427,7 @@ def afficher_interface_europresse():
                 <a href="URL_APP_2" class="app-card" target="_blank">
                     <i class="fas fa-robot"></i>
                     <span class="app-title">OPTIONS</span>
-                    <span class="app-desc">appliquer un traintement au corpus</span>
+                    <span class="app-desc">Appliquer un traintement au corpus</span>
                 </a>
 
                 <a href="URL_APP_3" class="app-card" target="_blank">
@@ -526,7 +526,7 @@ def afficher_interface_europresse():
     # Lien web
     st.markdown(
         """
-        <p style="font-size:14px;">
+        <p style="font-size:16px;">
             Consultez mon site où je partage des contenus autour de l'analyse de texte, de la data science et du NLP. 
             Si vous avez des questions, des retours ou des suggestions, n'hésitez pas à me contacter. 
             <a href="https://www.codeandcortex.fr" target="_blank">codeandxortex.fr</a>
@@ -534,9 +534,6 @@ def afficher_interface_europresse():
         """,
         unsafe_allow_html=True
     )
-
-    # Ligne de séparation
-    st.markdown("---")
 
     # Ligne de séparation
     st.markdown(
