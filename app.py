@@ -397,12 +397,12 @@ def afficher_interface_europresse():
         .streamlit-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 16px;
             margin: 0 auto;
-            max-width: 1100px;
+            max-width: 960px;
         }
         .app-card {
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 4 / 3;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 15px;
@@ -410,13 +410,13 @@ def afficher_interface_europresse():
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-decoration: none;
             color: var(--text-color);
             transition: all 0.3s ease;
-            padding: 20px;
+            padding: 14px;
             box-sizing: border-box;
             position: relative;
             text-align: center;
+            min-height: 220px;
         }
         .app-card:hover {
             transform: translateY(-8px);
@@ -425,18 +425,18 @@ def afficher_interface_europresse():
             background-color: #fff;
         }
         .app-card i {
-            font-size: 2.2rem;
-            margin-bottom: 12px;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
             color: var(--primary-color);
         }
         .app-card .app-title {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 700;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .app-card .app-desc {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 400;
             color: var(--desc-color);
             line-height: 1.3;
@@ -446,7 +446,7 @@ def afficher_interface_europresse():
         }
         @media (max-width: 600px) {
             .streamlit-grid { grid-template-columns: 1fr; }
-            .app-card { aspect-ratio: auto; padding: 30px; }
+            .app-card { aspect-ratio: auto; padding: 20px; min-height: auto; }
         }
         </style>
         """,
@@ -475,23 +475,23 @@ def afficher_interface_europresse():
         """
         <div class="streamlit-apps">
             <div class="streamlit-grid">
-                <a href="URL_APP_1" class="app-card" target="_blank">
+                <div class="app-card">
                     <i class="fas fa-chart-line"></i>
                     <span class="app-title">Analyse Financière</span>
                     <span class="app-desc">Suivi en temps réel des marchés boursiers.</span>
-                </a>
+                </div>
 
-                <a href="URL_APP_2" class="app-card" target="_blank">
+                <div class="app-card">
                     <i class="fas fa-robot"></i>
                     <span class="app-title">Assistant NLP</span>
                     <span class="app-desc">Analyse de sentiments sur des textes volumineux.</span>
-                </a>
+                </div>
 
-                <a href="URL_APP_3" class="app-card" target="_blank">
+                <div class="app-card">
                     <i class="fas fa-flask"></i>
                     <span class="app-title">Data Science Lab</span>
                     <span class="app-desc">Visualisation interactive de jeux de données.</span>
-                </a>
+                </div>
             </div>
         </div>
         """,
@@ -500,18 +500,6 @@ def afficher_interface_europresse():
 
     
     st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
-
-    # Lien web
-    st.markdown(
-        """
-        <p style="font-size:14px;">
-            Consultez mon site où je partage des contenus autour de l'analyse de texte, de la data science et du NLP. 
-            Si vous avez des questions, des retours ou des suggestions, n'hésitez pas à me contacter. 
-            <a href="https://www.codeandcortex.fr" target="_blank">codeandxortex.fr</a>
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
 
     # Ligne de séparation
     st.markdown(
