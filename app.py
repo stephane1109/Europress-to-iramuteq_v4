@@ -19,6 +19,7 @@ import re
 import html
 import csv
 import base64
+import textwrap
 import pandas as pd
 from bs4 import BeautifulSoup
 import streamlit as st
@@ -379,64 +380,79 @@ def afficher_interface_europresse():
          """)
 
     st.markdown(
-        """
+        textwrap.dedent(
+            """
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-        .feature-card {
-            background: #fff7f2;
-            border: 1px solid #ffd9c9;
-            border-radius: 14px;
-            padding: 18px 16px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            aspect-ratio: 1 / 1;
-            min-height: 320px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        :root {
+            --primary-color: #FF4B4B;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --text-color: #31333F;
+            --desc-color: #555e6d;
+            --border-color: #e0e0e0;
         }
-        .feature-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ff1f00;
+        .streamlit-apps {
+            font-family: 'Inter', sans-serif;
+        }
+        .streamlit-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 0 auto;
+            max-width: 720px;
+        }
+        .app-card {
+            aspect-ratio: 4 / 3;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-        }
-        .feature-title img {
-            display: block;
-            height: 256px;
-            width: 256px;
-        }
-        .feature-desc {
-            font-size: 14px;
-            color: #5a5a5a;
-            margin: 0;
-        }
-        .menu-inline {
-            display: flex;
             justify-content: center;
-            gap: 12px;
-            margin: 10px 0 20px;
-            flex-wrap: wrap;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            padding: 8px;
+            box-sizing: border-box;
+            position: relative;
+            text-align: center;
+            min-height: 140px;
         }
-        .menu-inline a {
-            background: #ffffff;
-            border: 1px solid #ffd9c9;
-            color: #ff5733;
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-size: 14px;
-            text-decoration: none;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        .app-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            background-color: #fff;
         }
-        .menu-inline a:hover {
-            border-color: #ffbda4;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        .app-card i {
+            font-size: 1.25rem;
+            margin-bottom: 6px;
+            color: var(--primary-color);
+        }
+        .app-card .app-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .app-card .app-desc {
+            font-size: 0.6rem;
+            font-weight: 400;
+            color: var(--desc-color);
+            line-height: 1.3;
+        }
+        @media (max-width: 1024px) {
+            .streamlit-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .streamlit-grid { grid-template-columns: 1fr; }
+            .app-card { aspect-ratio: auto; padding: 14px; min-height: auto; }
         }
         </style>
-        """,
+        """
+        ),
         unsafe_allow_html=True,
     )
 
@@ -449,16 +465,6 @@ def afficher_interface_europresse():
             f'<img src="data:image/png;base64,{encoded_icon}" alt="Options" />'
         )
 
-    telechargement_icon_path = os.path.join(os.path.dirname(__file__), "telechargement.png")
-    telechargement_icon_html = ""
-    if os.path.exists(telechargement_icon_path):
-        with open(telechargement_icon_path, "rb") as icon_file:
-            encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
-        telechargement_icon_html = (
-            f'<img src="data:image/png;base64,{encoded_icon}" '
-            f'alt="Importation" class="feature-icon--import" />'
-        )
-
     export_icon_path = os.path.join(os.path.dirname(__file__), "export.png")
     export_icon_html = ""
     if os.path.exists(export_icon_path):
@@ -468,49 +474,37 @@ def afficher_interface_europresse():
             f'<img src="data:image/png;base64,{encoded_icon}" alt="Export" />'
         )
 
-    bloc_gauche, bloc_1, bloc_2, bloc_3, bloc_droite = st.columns([1, 2, 2, 2, 1])
-    with bloc_1:
-        st.markdown(
-            f"""
-            <div class="feature-card">
-                <div class="feature-title">Import{telechargement_icon_html}</div>
+    st.markdown(
+        textwrap.dedent(
+            """
+        <div class="streamlit-apps">
+            <div class="streamlit-grid">
+                <div class="app-card">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="app-title">Analyse Financière</span>
+                    <span class="app-desc">Suivi en temps réel des marchés boursiers.</span>
+                </div>
+
+                <div class="app-card">
+                    <i class="fas fa-robot"></i>
+                    <span class="app-title">Assistant NLP</span>
+                    <span class="app-desc">Analyse de sentiments sur des textes volumineux.</span>
+                </div>
+
+                <div class="app-card">
+                    <i class="fas fa-flask"></i>
+                    <span class="app-title">Data Science Lab</span>
+                    <span class="app-desc">Visualisation interactive de jeux de données.</span>
+                </div>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with bloc_2:
-        st.markdown(
-            f"""
-            <div class="feature-card">
-                <div class="feature-title">Nettoyage{options_icon_html}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with bloc_3:
-        st.markdown(
-            f"""
-            <div class="feature-card">
-                <div class="feature-title">Export{export_icon_html}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        </div>
+        """
+        ),
+        unsafe_allow_html=True,
+    )
 
     
     st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
-
-    # Lien web
-    st.markdown(
-        """
-        <p style="font-size:14px;">
-            Consultez mon site où je partage des contenus autour de l'analyse de texte, de la data science et du NLP. 
-            Si vous avez des questions, des retours ou des suggestions, n'hésitez pas à me contacter. 
-            <a href="https://www.codeandcortex.fr" target="_blank">codeandxortex.fr</a>
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
 
     # Ligne de séparation
     st.markdown(
