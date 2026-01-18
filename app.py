@@ -366,7 +366,7 @@ def afficher_interface_europresse():
 
     # Ligne de séparation
     st.markdown(
-        '<hr style="margin-top:10px;margin-bottom:1px;">',
+        '<hr style="margin-top:10px;margin-bottom:10px;">',
         unsafe_allow_html=True,
     )
     st.markdown("""
