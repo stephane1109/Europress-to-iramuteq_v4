@@ -469,7 +469,9 @@ def afficher_interface_europresse():
             gap: 16px;
         }
         .app-card {
-            aspect-ratio: 1 / 1;
+            width: 200px;
+            height: 200px;
+            padding: 10px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 15px;
