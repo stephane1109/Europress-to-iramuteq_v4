@@ -406,9 +406,9 @@ def afficher_interface_europresse():
             width: 48px;
         }
         .feature-title img.feature-icon--import {
-            height: 64px;
-            margin-top: 10px;
-            width: 64px;
+            height: 128px;
+            margin-top: 4px;
+            width: 128px;
         }
         .feature-desc {
             font-size: 14px;
