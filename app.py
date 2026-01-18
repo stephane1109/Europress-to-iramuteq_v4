@@ -375,7 +375,7 @@ def afficher_interface_europresse():
         Le script (version 4) effectue un nettoyage du corpus et formate la première ligne de chaque article selon les exigences du
         logiciel.
 
-        **** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023
+        '**** *source_nomdujournal *date_2023-12-22 *am_2023-12 *annee_2023'
          """)
 
     st.markdown(
