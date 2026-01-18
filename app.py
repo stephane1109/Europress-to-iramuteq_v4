@@ -487,12 +487,12 @@ def afficher_interface_europresse():
         }
         .streamlit-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(var(--grid-columns, 4), minmax(0, 1fr));
             gap: 16px;
         }
         .app-card {
-            width: 250px;
-            height: 250px;
+            width: 100%;
+            min-height: 220px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 15px;
@@ -530,17 +530,51 @@ def afficher_interface_europresse():
             color: var(--desc-color);
             line-height: 1.3;
         }
-        @media (max-width: 1200px) {
-            .streamlit-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .streamlit-grid { grid-template-columns: 1fr; }
-            .app-card { aspect-ratio: auto; padding: 24px; }
-        }
         </style>
+        <script>
+        const setGridColumns = () => {
+            const container = document.querySelector(".container");
+            if (!container) return;
+            const width = container.clientWidth;
+            let columns = 4;
+            if (width < 520) {
+                columns = 1;
+            } else if (width < 900) {
+                columns = 2;
+            } else if (width < 1100) {
+                columns = 3;
+            }
+            container.style.setProperty("--grid-columns", columns);
+        };
+
+        const adjustFrameHeight = () => {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage(
+                {
+                    isStreamlitMessage: true,
+                    type: "setFrameHeight",
+                    height,
+                },
+                "*"
+            );
+        };
+
+        const handleResize = () => {
+            setGridColumns();
+            adjustFrameHeight();
+        };
+
+        window.addEventListener("load", handleResize);
+        window.addEventListener("resize", handleResize);
+
+        if (window.ResizeObserver) {
+            const observer = new ResizeObserver(handleResize);
+            observer.observe(document.body);
+        }
+        </script>
         """
         ),
-        height=360,
+        height=400,
     )
 
     
