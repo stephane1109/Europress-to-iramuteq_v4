@@ -450,9 +450,12 @@ def afficher_interface_europresse():
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
+            background-color: transparent;
             margin: 0;
             padding: 0;
+        }
+        html {
+            background-color: transparent;
         }
         .container {
             width: 100%;
