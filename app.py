@@ -487,12 +487,12 @@ def afficher_interface_europresse():
         }
         .streamlit-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
         }
         .app-card {
-            width: 250px;
-            height: 250px;
+            width: 100%;
+            min-height: 220px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 15px;
@@ -530,17 +530,25 @@ def afficher_interface_europresse():
             color: var(--desc-color);
             line-height: 1.3;
         }
-        @media (max-width: 1200px) {
-            .streamlit-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .streamlit-grid { grid-template-columns: 1fr; }
-            .app-card { aspect-ratio: auto; padding: 24px; }
-        }
         </style>
+        <script>
+        const adjustFrameHeight = () => {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage(
+                {
+                    isStreamlitMessage: true,
+                    type: "setFrameHeight",
+                    height,
+                },
+                "*"
+            );
+        };
+        window.addEventListener("load", adjustFrameHeight);
+        window.addEventListener("resize", adjustFrameHeight);
+        </script>
         """
         ),
-        height=360,
+        height=400,
     )
 
     
