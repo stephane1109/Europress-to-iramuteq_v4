@@ -388,7 +388,7 @@ def afficher_interface_europresse():
             padding: 18px 16px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            height: 150px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -396,14 +396,20 @@ def afficher_interface_europresse():
         .feature-title {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 6px;
             color: #ff1f00;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
         .feature-title img {
             display: block;
-            height: 32px;
-            margin: 6px auto 0;
-            width: 32px;
+            height: 48px;
+            width: 48px;
+        }
+        .feature-title img.feature-icon--import {
+            height: 128px;
+            width: 128px;
         }
         .feature-desc {
             font-size: 14px;
@@ -451,7 +457,8 @@ def afficher_interface_europresse():
         with open(telechargement_icon_path, "rb") as icon_file:
             encoded_icon = base64.b64encode(icon_file.read()).decode("utf-8")
         telechargement_icon_html = (
-            f'<img src="data:image/png;base64,{encoded_icon}" alt="Importation" />'
+            f'<img src="data:image/png;base64,{encoded_icon}" '
+            f'alt="Importation" class="feature-icon--import" />'
         )
 
     export_icon_path = os.path.join(os.path.dirname(__file__), "export.png")
