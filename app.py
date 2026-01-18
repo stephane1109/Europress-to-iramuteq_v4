@@ -396,13 +396,20 @@ def afficher_interface_europresse():
         }
         .streamlit-apps {
             font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+        .block-container {
+            max-width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
         }
         .streamlit-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             margin: 0 auto;
-            max-width: 720px;
+            max-width: 1200px;
+            width: 100%;
         }
         .app-card {
             aspect-ratio: 4 / 3;
