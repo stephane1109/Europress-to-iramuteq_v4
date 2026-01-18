@@ -401,9 +401,9 @@ def afficher_interface_europresse():
         }
         .feature-title img {
             display: block;
-            height: 32px;
-            margin: 6px auto 0;
-            width: 32px;
+            height: 48px;
+            margin: 8px auto 0;
+            width: 48px;
         }
         .feature-desc {
             font-size: 14px;
