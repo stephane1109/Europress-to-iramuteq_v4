@@ -4,7 +4,7 @@
 # Contact : stephane.meurisse@gmail.com
 # Site Web : https://www.codeandcortex.fr
 # LinkedIn : https://www.linkedin.com/in/st%C3%A9phane-meurisse-27339055/
-# Date : 31 Décembre 2024
+# Date : 18 janvier 2026
 # Version : 4
 # Licence : Ce programme est un logiciel libre : vous pouvez le redistribuer selon les termes de la Licence Publique Générale GNU v3
 # -----------------------------------------
@@ -420,20 +420,20 @@ def afficher_interface_europresse():
             <div class="streamlit-grid">
                 <a href="URL_APP_1" class="app-card" target="_blank">
                     <i class="fas fa-chart-line"></i>
-                    <span class="app-title">Analyse Financière</span>
-                    <span class="app-desc">Suivi en temps réel des marchés boursiers.</span>
+                    <span class="app-title">IMPORT</span>
+                    <span class="app-desc">Glisser-déposer votre fichier html</span>
                 </a>
 
                 <a href="URL_APP_2" class="app-card" target="_blank">
                     <i class="fas fa-robot"></i>
-                    <span class="app-title">Assistant NLP</span>
-                    <span class="app-desc">Analyse de sentiments sur des textes volumineux.</span>
+                    <span class="app-title">OPTIONS</span>
+                    <span class="app-desc">appliquer un traintement au corpus</span>
                 </a>
 
                 <a href="URL_APP_3" class="app-card" target="_blank">
                     <i class="fas fa-flask"></i>
-                    <span class="app-title">Data Science Lab</span>
-                    <span class="app-desc">Visualisation interactive de jeux de données.</span>
+                    <span class="app-title">Exports</span>
+                    <span class="app-desc">fichiers .txt .csv .xlxs</span>
                 </a>
             </div>
         </div>
