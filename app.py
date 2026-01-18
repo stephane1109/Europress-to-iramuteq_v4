@@ -19,6 +19,7 @@ import re
 import html
 import csv
 import base64
+import textwrap
 import pandas as pd
 from bs4 import BeautifulSoup
 import streamlit as st
@@ -379,7 +380,8 @@ def afficher_interface_europresse():
          """)
 
     st.markdown(
-        """
+        textwrap.dedent(
+            """
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -397,26 +399,26 @@ def afficher_interface_europresse():
         .streamlit-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 8px;
             margin: 0 auto;
-            max-width: 960px;
+            max-width: 720px;
         }
         .app-card {
             aspect-ratio: 4 / 3;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 15px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: var(--text-color);
             transition: all 0.3s ease;
-            padding: 14px;
+            padding: 8px;
             box-sizing: border-box;
             position: relative;
             text-align: center;
-            min-height: 220px;
+            min-height: 140px;
         }
         .app-card:hover {
             transform: translateY(-8px);
@@ -425,18 +427,18 @@ def afficher_interface_europresse():
             background-color: #fff;
         }
         .app-card i {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 1.25rem;
+            margin-bottom: 6px;
             color: var(--primary-color);
         }
         .app-card .app-title {
-            font-size: 0.85rem;
+            font-size: 0.72rem;
             font-weight: 700;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 3px;
         }
         .app-card .app-desc {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 400;
             color: var(--desc-color);
             line-height: 1.3;
@@ -446,10 +448,11 @@ def afficher_interface_europresse():
         }
         @media (max-width: 600px) {
             .streamlit-grid { grid-template-columns: 1fr; }
-            .app-card { aspect-ratio: auto; padding: 20px; min-height: auto; }
+            .app-card { aspect-ratio: auto; padding: 14px; min-height: auto; }
         }
         </style>
-        """,
+        """
+        ),
         unsafe_allow_html=True,
     )
 
@@ -472,7 +475,8 @@ def afficher_interface_europresse():
         )
 
     st.markdown(
-        """
+        textwrap.dedent(
+            """
         <div class="streamlit-apps">
             <div class="streamlit-grid">
                 <div class="app-card">
@@ -494,7 +498,8 @@ def afficher_interface_europresse():
                 </div>
             </div>
         </div>
-        """,
+        """
+        ),
         unsafe_allow_html=True,
     )
 
