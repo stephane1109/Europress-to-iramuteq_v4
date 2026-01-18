@@ -388,7 +388,7 @@ def afficher_interface_europresse():
             padding: 18px 16px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            height: 150px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -396,18 +396,19 @@ def afficher_interface_europresse():
         .feature-title {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 6px;
             color: #ff1f00;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
         .feature-title img {
             display: block;
             height: 48px;
-            margin: 8px auto 0;
             width: 48px;
         }
         .feature-title img.feature-icon--import {
             height: 128px;
-            margin-top: 4px;
             width: 128px;
         }
         .feature-desc {
