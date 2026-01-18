@@ -487,7 +487,7 @@ def afficher_interface_europresse():
         }
         .streamlit-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(var(--grid-columns, 4), minmax(0, 1fr));
             gap: 16px;
         }
         .app-card {
@@ -532,6 +532,21 @@ def afficher_interface_europresse():
         }
         </style>
         <script>
+        const setGridColumns = () => {
+            const container = document.querySelector(".container");
+            if (!container) return;
+            const width = container.clientWidth;
+            let columns = 4;
+            if (width < 520) {
+                columns = 1;
+            } else if (width < 900) {
+                columns = 2;
+            } else if (width < 1100) {
+                columns = 3;
+            }
+            container.style.setProperty("--grid-columns", columns);
+        };
+
         const adjustFrameHeight = () => {
             const height = document.documentElement.scrollHeight;
             window.parent.postMessage(
@@ -543,8 +558,19 @@ def afficher_interface_europresse():
                 "*"
             );
         };
-        window.addEventListener("load", adjustFrameHeight);
-        window.addEventListener("resize", adjustFrameHeight);
+
+        const handleResize = () => {
+            setGridColumns();
+            adjustFrameHeight();
+        };
+
+        window.addEventListener("load", handleResize);
+        window.addEventListener("resize", handleResize);
+
+        if (window.ResizeObserver) {
+            const observer = new ResizeObserver(handleResize);
+            observer.observe(document.body);
+        }
         </script>
         """
         ),
