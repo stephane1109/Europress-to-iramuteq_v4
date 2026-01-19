@@ -588,8 +588,10 @@ def afficher_interface_europresse():
             st.caption(
                 "Aide regex : exemple pour supprimer « Page 3 » → "
                 r"`\bPage\s*3\b`"
-                "Plusieurs motifs ? utilisez `motif1|motif2` (ex: "
+                "Plusieurs motifs ? utilisez `motif1|motif2` (OU) (ex: "
                 r"`\bPage\s*3\b|\bAnnexe\b`). "
+                "Besoin d'un ET ? utilisez des lookaheads, ex: "
+                r"`(?=.*\bPage\b)(?=.*\b3\b)` (les deux doivent être présents). "
                 "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
                 "appuyez sur Entrée pour valider. "
                 "La regex est appliquée aux textes des balises ciblées : si elle "

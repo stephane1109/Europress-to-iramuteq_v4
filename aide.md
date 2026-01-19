@@ -77,6 +77,8 @@ Ces motifs s’utilisent dans le champ **Regex additionnelle** (sans préfixe `r
   *Ex.* `^Le Figaro` (commence par “Le Figaro”).
 - **Alternatives (OU)** : `motif1|motif2`.  
   *Ex.* `\bPage\s*3\b|\bAnnexe\b`.
+- **Conditions (ET)** : utiliser des lookaheads pour exiger plusieurs motifs.  
+  *Ex.* `(?=.*\bPage\b)(?=.*\b3\b)` (les deux doivent être présents).
 - **Classes de caractères** : `[A-Z]` (lettres majuscules), `[0-9]` (chiffres).  
   *Ex.* `^Page [0-9]+$`.
 - **Quantificateurs** : `*` (0+), `+` (1+), `?` (0 ou 1), `{m,n}` (entre m et n).  
