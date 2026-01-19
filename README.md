@@ -72,6 +72,12 @@ Pour chaque `<article>` :
 - L’utilisateur peut exporter un corpus sans doublons et/ou sans articles courts. Le texte est reconstruit à partir des articles
   retenus.
 
+#### 6) Exports générés
+- **TXT** : corpus IRaMuTeQ complet.
+- **CSV** : colonnes `Journal`, `Année-mois-jour`, `Année-mois`, `Année`, `Article`.
+- **XLSX** : export Excel des mêmes colonnes (via pandas).
+- Les trois fichiers sont dans un ZIP, nommé à partir du fichier HTML d’origine.
+
 -----------------------------------------
 ### Aide regex
 
@@ -99,12 +105,6 @@ Ces trois règles sont **indépendantes**. L’utilisateur peut les tester **une
 - Si besoin de combiner, utiliser l’alternative `|` :  
   `\bPage\s*12\b|\bPage\b|\b3\b`  
   (cela appliquera les trois règles en une seule expression).
-
-#### 6) Exports générés
-- **TXT** : corpus IRaMuTeQ complet.
-- **CSV** : colonnes `Journal`, `Année-mois-jour`, `Année-mois`, `Année`, `Article`.
-- **XLSX** : export Excel des mêmes colonnes (via pandas).
-- Les trois fichiers sont dans un ZIP, nommé à partir du fichier HTML d’origine.
 
 -----------------------------------------
 ### Utilisation
