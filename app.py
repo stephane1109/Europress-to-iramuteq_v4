@@ -625,10 +625,14 @@ def afficher_interface_europresse():
         longueur_minimale = LONGUEUR_MINIMALE_PAR_DEFAUT
         if recherche_doublons:
             longueur_minimale = st.number_input(
-                "Longueur minimale des articles en nombre de mots (pour signaler les articles trop courts)",
+                "Longueur minimale des articles en nombre de mots",
                 min_value=0,
                 value=LONGUEUR_MINIMALE_PAR_DEFAUT,
                 step=10,
+            )
+            st.caption(
+                'Si le compter_mots(corps_article) < longueur_minimale, '
+                'l’article est ajouté à la liste "articles_courts"'
             )
 
         contenu_html = uploaded_file.read()
