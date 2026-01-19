@@ -587,7 +587,7 @@ def afficher_interface_europresse():
             )
             st.caption(
                 "Aide regex : exemple pour supprimer « Page 3 » → "
-                r"`\bPage\s*3\b` (les limites de mot évitent les sous-chaînes). "
+                r"`\bPage\s*3\b`"
                 "Plusieurs motifs ? utilisez `motif1|motif2` (ex: "
                 r"`\bPage\s*3\b|\bAnnexe\b`). "
                 "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
