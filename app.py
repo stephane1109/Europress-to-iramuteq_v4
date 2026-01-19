@@ -682,6 +682,7 @@ def afficher_interface_europresse():
         articles_courts = processed_data["articles_courts"]
 
         st.markdown("### Résultats de la recherche de doublons")
+        st.caption("Expérimental, à vos risques et périls !")
         st.write(f"Nombre d'articles en double : {len(articles_doublons)}")
         st.write(f"Nombre d'articles trop courts : {len(articles_courts)}")
 
