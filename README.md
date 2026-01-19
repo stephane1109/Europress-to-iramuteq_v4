@@ -77,11 +77,27 @@ Pour chaque `<article>` :
 Ces motifs s’utilisent dans le champ Regex additionnelle (sans préfixe r) pour filtrer davantage les balises lors du nettoyage expérimental.
 Principales règles
 
-Exemples utiles
+### Exemple de 3 règles séparées à saisir dans l’interface
+Ces trois règles sont **indépendantes**. L’utilisateur peut les tester **une par une** dans le champ **Regex additionnelle** selon le besoin.
 
--`Supprimer “Page 3”, “Page 12” : \bPage\s*\d+\b`
+1. **Supprimer exactement “Page 12”**  
+   - **Regex** : `\bPage\s*12\b`  
+   - **Effet** : supprime uniquement la balise qui contient “Page 12” (espaces facultatifs).  
 
+2. **Supprimer le mot “Page” seul**  
+   - **Regex** : `\bPage\b`  
+   - **Effet** : supprime toute balise contenant le mot “Page”, sans imposer de numéro.  
 
+3. **Supprimer le chiffre “3” seul**  
+   - **Regex** : `\b3\b`  
+   - **Effet** : supprime toute balise contenant le chiffre “3” en tant que mot isolé.  
+
+#### Comment les intégrer dans le champ Regex
+- Ouvrir l’interface et aller dans **Nettoyage expérimental → Regex additionnelle (optionnelle)**.  
+- **Saisir une seule règle à la fois** pour vérifier le résultat.  
+- Si besoin de combiner, utiliser l’alternative `|` :  
+  `\bPage\s*12\b|\bPage\b|\b3\b`  
+  (cela appliquera les trois règles en une seule expression).
 
 #### 6) Exports générés
 - **TXT** : corpus IRaMuTeQ complet.
