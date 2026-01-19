@@ -437,7 +437,7 @@ def afficher_interface_europresse():
         unsafe_allow_html=True
     )
 
-    # Sous-titre en plus petit (h3)
+    # Sous-titre (h3)
     st.markdown(
         "<h3 style='text-align: center; font-size: 34'px;'>Traitement des fichiers Europresse 😊</h3>",
         unsafe_allow_html=True
@@ -490,8 +490,6 @@ def afficher_interface_europresse():
         export_icon_html = (
             f'<img src="data:image/png;base64,{encoded_icon}" alt="Exports" />'
         )
-
-    st.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
 
     # Ligne de séparation
     st.markdown(
