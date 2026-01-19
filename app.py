@@ -294,16 +294,12 @@ def extraire_texte_html(
 
             for p_tag in article.find_all("p", class_="sm-margin-bottomNews"):
                 texte_p = p_tag.get_text(strip=True)
-                if any(terme in texte_p for terme in termes_a_supprimer) or (
-                    regex_suppression and regex_any_match(regex_suppression, texte_p)
-                ):
+                if any(terme in texte_p for terme in termes_a_supprimer):
                     p_tag.decompose()
 
             for div_tag in article.find_all("div"):
                 texte_div = div_tag.get_text(strip=True)
-                if any(terme == texte_div for terme in termes_a_supprimer) or (
-                    regex_suppression and regex_any_match(regex_suppression, texte_div)
-                ):
+                if any(terme == texte_div for terme in termes_a_supprimer):
                     div_tag.decompose()
 
 
@@ -616,9 +612,8 @@ def afficher_interface_europresse():
                 r"`(?=.*\bPage\b)(?=.*\b3\b)`. "
                 "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
                 "appuyez sur Entrée pour valider. "
-                "Regex additionnelle : si la regex matche, la balise est supprimée. "
-                "Les correspondances sont appliquées au texte complet de l'article (tout le corpus). "
-                "Les correspondances sont supprimées (recherche sensible à la casse)."
+                "Regex additionnelle : les correspondances sont supprimées du texte complet "
+                "de l'article (tout le corpus) (recherche sensible à la casse)."
             )
             if termes_supplementaires_brut:
                 termes_supplementaires = [

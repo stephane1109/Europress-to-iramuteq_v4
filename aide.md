@@ -51,7 +51,7 @@
 
 ### Nettoyage expérimental
 - **Supprimer les balises contenant “Edito”, “AUTRE”, ...** : nettoyage supplémentaire (expérimental).
-- **Regex additionnelle (optionnelle)** : filtre avancé appliqué au texte des balises ciblées (insensible à la casse). Si la regex matche, la balise est supprimée. Les correspondances sont appliquées au texte complet de l’article (tout le corpus).
+- **Regex additionnelle (optionnelle)** : filtre appliqué au texte complet de l’article (tout le corpus). Les correspondances sont supprimées (sensible à la casse).
 
 Détails sur la suppression par termes (option expérimentale) :
   - Les termes saisis `complètent le dictionnaire par défaut`.
