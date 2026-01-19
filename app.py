@@ -159,6 +159,14 @@ def extraire_texte_html(
         regex_suppression=None,
     ):
 
+    def regex_any_match(regex_list, texte):
+        return any(regex.search(texte) for regex in regex_list)
+
+    def appliquer_regex_suppression(regex_list, texte):
+        for regex in regex_list:
+            texte = regex.sub("", texte)
+        return texte
+
     soup = BeautifulSoup(contenu_html, 'html.parser')
     articles = soup.find_all('article')
     texte_final = ""
@@ -286,16 +294,12 @@ def extraire_texte_html(
 
             for p_tag in article.find_all("p", class_="sm-margin-bottomNews"):
                 texte_p = p_tag.get_text(strip=True)
-                if any(terme in texte_p for terme in termes_a_supprimer) or (
-                    regex_suppression and regex_suppression.search(texte_p)
-                ):
+                if any(terme in texte_p for terme in termes_a_supprimer):
                     p_tag.decompose()
 
             for div_tag in article.find_all("div"):
                 texte_div = div_tag.get_text(strip=True)
-                if any(terme == texte_div for terme in termes_a_supprimer) or (
-                    regex_suppression and regex_suppression.search(texte_div)
-                ):
+                if any(terme == texte_div for terme in termes_a_supprimer):
                     div_tag.decompose()
 
 
@@ -340,7 +344,7 @@ def extraire_texte_html(
             texte_article = article.get_text("\n", strip=True)
 
         if supprimer_balises and regex_suppression and texte_article:
-            texte_article = regex_suppression.sub("", texte_article)
+            texte_article = appliquer_regex_suppression(regex_suppression, texte_article)
             # Le "\n" dans get_text() permet d’éviter que tout soit sur une seule ligne.
 
         # --------------------------------------------------------------------
@@ -573,7 +577,7 @@ def afficher_interface_europresse():
             index=0
         )
         termes_supplementaires = []
-        regex_suppression = None
+        regex_suppression = []
         if supprimer_balises_radio == "Oui":
             with st.expander("Voir le dictionnaire des termes supprimés"):
                 st.text_area(
@@ -600,14 +604,16 @@ def afficher_interface_europresse():
             st.caption(
                 "Aide regex : exemple pour supprimer « Page 3 » → "
                 r"`\bPage\s*3\b`"
-                "Plusieurs motifs ? utilisez `motif1|motif2` (OU) (ex: "
-                r"`\bPage\s*3\b|\bAnnexe\b`). "
-                "Besoin d'un ET ? utilisez des lookaheads, ex: "
-                r"`(?=.*\bPage\b)(?=.*\b3\b)` (les deux doivent être présents). "
+                "Pour une seule regex avec plusieurs alternatives, utilisez `|` (OU), ex: "
+                r"`\bPage\s*3\b|\bAnnexe\b`. "
+                "Pour enchaîner plusieurs regex indépendantes, séparez-les par `ET`, ex: "
+                r"`\bPage\s*2\b ET \bPage\s*3\b` (chaque motif est évalué). "
+                "Pour exiger la présence simultanée, utilisez des lookaheads, ex: "
+                r"`(?=.*\bPage\b)(?=.*\b3\b)`. "
                 "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
                 "appuyez sur Entrée pour valider. "
-                "La regex est appliquée au texte complet de l'article : les "
-                "correspondances sont supprimées (recherche sensible à la casse)."
+                "Regex additionnelle : les correspondances sont supprimées du texte complet "
+                "de l'article (tout le corpus) (recherche sensible à la casse)."
             )
             if termes_supplementaires_brut:
                 termes_supplementaires = [
@@ -617,11 +623,18 @@ def afficher_interface_europresse():
                     if terme.strip()
                 ]
             if regex_suppression_brut:
-                try:
-                    regex_suppression = re.compile(regex_suppression_brut)
-                except re.error as exc:
-                    st.warning(f"Regex invalide ignorée : {exc}")
-                    regex_suppression = None
+                morceaux_regex = [
+                    fragment.strip()
+                    for fragment in re.split(r"\s+ET\s+", regex_suppression_brut, flags=re.IGNORECASE)
+                    if fragment.strip()
+                ]
+                for fragment in morceaux_regex:
+                    try:
+                        regex_suppression.append(re.compile(fragment))
+                    except re.error as exc:
+                        st.warning(f"Regex invalide ignorée ({fragment}) : {exc}")
+                if len(morceaux_regex) > 1 and regex_suppression:
+                    st.caption("Mode ET détecté : toutes les regex sont appliquées.")
 
         mode_contenu_label = st.radio(
             "Contenu à exporter",
