@@ -93,3 +93,25 @@ Ces motifs s’utilisent dans le champ **Regex additionnelle** (sans préfixe `r
 - **Supprimer “Page 3”, “Page 12”** : `\bPage\s*\d+\b`
 - **Supprimer une mention de source** : `^Source\s*:`
 - **Supprimer les mentions “Annexe A/B”** : `\bAnnexe\s*[A-Z]\b`
+
+### Cas demandé : 3 règles séparées à saisir dans l’interface
+Ces trois règles sont **indépendantes**. L’utilisateur peut les tester **une par une** dans le champ **Regex additionnelle** selon le besoin.
+
+1. **Supprimer exactement “Page 12”**  
+   - **Regex** : `\bPage\s*12\b`  
+   - **Effet** : supprime uniquement la balise qui contient “Page 12” (espaces facultatifs).  
+
+2. **Supprimer le mot “Page” seul**  
+   - **Regex** : `\bPage\b`  
+   - **Effet** : supprime toute balise contenant le mot “Page”, sans imposer de numéro.  
+
+3. **Supprimer le chiffre “3” seul**  
+   - **Regex** : `\b3\b`  
+   - **Effet** : supprime toute balise contenant le chiffre “3” en tant que mot isolé.  
+
+#### Comment les intégrer dans le champ
+- Ouvrir l’interface et aller dans **Nettoyage expérimental → Regex additionnelle (optionnelle)**.  
+- **Saisir une seule règle à la fois** pour vérifier le résultat.  
+- Si besoin de combiner, utiliser l’alternative `|` :  
+  `\bPage\s*12\b|\bPage\b|\b3\b`  
+  (cela appliquera les trois règles en une seule expression).
