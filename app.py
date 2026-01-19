@@ -515,6 +515,11 @@ def afficher_interface_europresse():
     )
     st.markdown(televersement_header_html, unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Importer un fichier HTML Europresse", type="html")
+    article_count_placeholder = st.empty()
+    if st.session_state.get("article_count") is not None:
+        article_count_placeholder.caption(
+            f"Nombre d'articles dans le corpus : {st.session_state['article_count']}"
+        )
 
     st.markdown('<div id="options"></div>', unsafe_allow_html=True)
     if options_icon_html:
@@ -537,6 +542,7 @@ def afficher_interface_europresse():
         ):
             st.session_state["processed_data"] = None
             st.session_state["processed_filename"] = None
+            st.session_state["article_count"] = None
         # variable_suppl_texte = st.text_input("Ajoutez votre variable supplémentaire (sans *)")
         nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
         date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
@@ -666,6 +672,10 @@ def afficher_interface_europresse():
             "recherche_doublons": recherche_doublons,
             "longueur_minimale": longueur_minimale,
         }
+        st.session_state["article_count"] = len(data_for_csv)
+        article_count_placeholder.caption(
+            f"Nombre d'articles dans le corpus : {st.session_state['article_count']}"
+        )
 
         if recherche_doublons:
             (
@@ -690,6 +700,7 @@ def afficher_interface_europresse():
         st.session_state["processed_filename"] = uploaded_file.name
     else:
         st.info("Importez un fichier pour afficher les options de traitement.")
+        st.session_state["article_count"] = None
 
     processed_data = st.session_state.get("processed_data")
     articles_doublons = []
