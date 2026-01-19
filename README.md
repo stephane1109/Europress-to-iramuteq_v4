@@ -3,7 +3,7 @@
 - Auteur : Stéphane Meurisse
 - Contact : stephane.meurisse@gmail.com
 - Site Web : https://www.codeandcortex.fr
-- Aplli : https://europress-to-iramuteq-v4.streamlit.app/
+- Appli : https://europress-to-iramuteq-v4.streamlit.app/
 - LinkedIn : https://www.linkedin.com/in/st%C3%A9phane-meurisse-27339055/
 - Date : 17 janvier 2026
 - Version : 4
