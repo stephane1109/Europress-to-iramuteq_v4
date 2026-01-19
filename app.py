@@ -675,9 +675,9 @@ def afficher_interface_europresse():
         st.info("Importez un fichier pour afficher les options de traitement.")
 
     processed_data = st.session_state.get("processed_data")
-    st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
-    st.markdown(f"<h2>{export_icon_html} Export</h2>", unsafe_allow_html=True)
     if processed_data:
+        st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
+        st.markdown(f"<h2>{export_icon_html} Export</h2>", unsafe_allow_html=True)
         texte_final_export = processed_data["texte_final"]
         data_for_csv_export = processed_data["data_for_csv"]
         base_name = processed_data["base_name"]
