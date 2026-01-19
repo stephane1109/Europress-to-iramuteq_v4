@@ -439,7 +439,7 @@ def afficher_interface_europresse():
 
     # Sous-titre (h3)
     st.markdown(
-        "<h3 style='text-align: center; font-size: 34'px;'>Traitement des fichiers Europresse `v4` 😊</h3>",
+        "<h3 style='text-align: center; font-size: 34'px;'>Traitement des fichiers Europresse v4 😊</h3>",
         unsafe_allow_html=True
     )
 
