@@ -675,6 +675,40 @@ def afficher_interface_europresse():
         st.info("Importez un fichier pour afficher les options de traitement.")
 
     processed_data = st.session_state.get("processed_data")
+    articles_doublons = []
+    articles_courts = []
+    if processed_data and processed_data["recherche_doublons"]:
+        articles_doublons = processed_data["articles_doublons"]
+        articles_courts = processed_data["articles_courts"]
+
+        st.markdown("### Résultats de la recherche de doublons")
+        st.write(f"Nombre d'articles en double : {len(articles_doublons)}")
+        st.write(f"Nombre d'articles trop courts : {len(articles_courts)}")
+
+        with st.expander("Voir les articles en double"):
+            if articles_doublons:
+                for index, article in enumerate(articles_doublons, start=1):
+                    st.text_area(
+                        f"Doublon {index}",
+                        value=extraire_apercu(article, 300),
+                        height=120,
+                        key=f"doublon_{index}",
+                    )
+            else:
+                st.write("Aucun doublon détecté.")
+
+        with st.expander("Voir les articles trop courts"):
+            if articles_courts:
+                for index, article in enumerate(articles_courts, start=1):
+                    st.text_area(
+                        f"Article court {index}",
+                        value=extraire_apercu(article, 300),
+                        height=120,
+                        key=f"court_{index}",
+                    )
+            else:
+                st.write("Aucun article trop court détecté.")
+
     st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
     if export_icon_html:
         export_icon_html = export_icon_html.replace(
@@ -694,37 +728,6 @@ def afficher_interface_europresse():
         base_name = processed_data["base_name"]
 
         if processed_data["recherche_doublons"]:
-            articles_doublons = processed_data["articles_doublons"]
-            articles_courts = processed_data["articles_courts"]
-
-            st.markdown("### Résultats de la recherche de doublons")
-            st.write(f"Nombre d'articles en double : {len(articles_doublons)}")
-            st.write(f"Nombre d'articles trop courts : {len(articles_courts)}")
-
-            with st.expander("Voir les articles en double"):
-                if articles_doublons:
-                    for index, article in enumerate(articles_doublons, start=1):
-                        st.text_area(
-                            f"Doublon {index}",
-                            value=extraire_apercu(article, 300),
-                            height=120,
-                            key=f"doublon_{index}",
-                        )
-                else:
-                    st.write("Aucun doublon détecté.")
-
-            with st.expander("Voir les articles trop courts"):
-                if articles_courts:
-                    for index, article in enumerate(articles_courts, start=1):
-                        st.text_area(
-                            f"Article court {index}",
-                            value=extraire_apercu(article, 300),
-                            height=120,
-                            key=f"court_{index}",
-                        )
-                else:
-                    st.write("Aucun article trop court détecté.")
-
             exporter_sans_doublons = st.checkbox(
                 "Exporter le corpus sans doublons"
             )
