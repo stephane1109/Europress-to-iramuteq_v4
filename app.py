@@ -461,7 +461,6 @@ def afficher_interface_europresse():
 
         Possibilité d'exporter l'article ou de selectionner uniquement le titres et le chapô.
          """)
-
     # Lien web
     st.markdown(
         """
