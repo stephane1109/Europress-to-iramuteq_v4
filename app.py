@@ -286,14 +286,14 @@ def extraire_texte_html(
 
             for p_tag in article.find_all("p", class_="sm-margin-bottomNews"):
                 texte_p = p_tag.get_text(strip=True)
-                if any(terme.lower() in texte_p.lower() for terme in termes_a_supprimer) or (
+                if any(terme in texte_p for terme in termes_a_supprimer) or (
                     regex_suppression and regex_suppression.search(texte_p)
                 ):
                     p_tag.decompose()
 
             for div_tag in article.find_all("div"):
                 texte_div = div_tag.get_text(strip=True)
-                if any(terme.lower() == texte_div.lower() for terme in termes_a_supprimer) or (
+                if any(terme == texte_div for terme in termes_a_supprimer) or (
                     regex_suppression and regex_suppression.search(texte_div)
                 ):
                     div_tag.decompose()
@@ -577,6 +577,10 @@ def afficher_interface_europresse():
                 "Ajouter des mots/expressions à supprimer (séparés par des virgules ou retours à la ligne)",
                 value="",
             )
+            st.caption(
+                "Ces termes sont comparés avec respect de la casse "
+                "(ex: « Autre » ne supprime pas « autre »)."
+            )
             regex_suppression_brut = st.text_input(
                 "Regex additionnelle (optionnelle) pour filtrer davantage",
                 value="",
@@ -592,7 +596,7 @@ def afficher_interface_europresse():
                 "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
                 "appuyez sur Entrée pour valider. "
                 "La regex est appliquée aux textes des balises ciblées : si elle "
-                "matche, la balise est supprimée (recherche insensible à la casse)."
+                "matche, la balise est supprimée (recherche sensible à la casse)."
             )
             if termes_supplementaires_brut:
                 termes_supplementaires = [
@@ -603,7 +607,7 @@ def afficher_interface_europresse():
                 ]
             if regex_suppression_brut:
                 try:
-                    regex_suppression = re.compile(regex_suppression_brut, flags=re.IGNORECASE)
+                    regex_suppression = re.compile(regex_suppression_brut)
                 except re.error as exc:
                     st.warning(f"Regex invalide ignorée : {exc}")
                     regex_suppression = None
