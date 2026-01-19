@@ -56,6 +56,12 @@ Pour chaque `<article>` :
 - Le texte brut est récupéré via `article.get_text` puis nettoyé. Les sections non pertinentes (header, aside, footer, images, liens)
   sont supprimées. Des balises `<i>` et `<em>` sont conservées mais déroulées (unwrap).
 - Option **expérimentale** : suppression conditionnelle de blocs contenant des rubriques (ex. “Edito”, “Opinions”, “Débats”, ...)
+- Détails sur la suppression par termes (option expérimentale) :
+  - Les termes saisis **complètent** le dictionnaire par défaut.
+  - La comparaison est **sensible à la casse** (ex: « Autre » ne supprime pas « autre »).
+  - La recherche **ne scanne pas tout le texte** : elle cible uniquement
+    - les balises `<p>` avec la classe `sm-margin-bottomNews` (suppression si un terme est **contenu** dans le texte) ;
+    - les balises `<div>` (suppression si le texte est **exactement égal** à un terme).
 - Le titre est conservé dans le texte final (pas de suppression de la balise titre).
 - Les mentions de journal/date brut sont retirées du texte (`re.sub`).
 - Les sauts de lignes sont aplatis, les URLs “(lien : …)” sont retirées, et la première ligne reçoit un point final si besoin.
