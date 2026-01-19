@@ -586,9 +586,11 @@ def afficher_interface_europresse():
                 "Ajouter des mots/expressions à supprimer (séparés par des virgules ou retours à la ligne)",
                 value="",
             )
-            st.caption(
-                "Ces termes sont comparés avec respect de la casse "
-                "(ex: « Autre » ne supprime pas « autre »)."
+            st.markdown(
+                "- Les termes saisis `complètent le dictionnaire par défaut`.\n"
+                "- La comparaison est `sensible à la casse` (ex: « Autre » ne supprime pas « autre »).\n"
+                "- La recherche `ne scanne pas tout le texte` : elle cible uniquement les balises "
+                "`<p>` avec la classe `sm-margin-bottomNews` et les balises `<div>`."
             )
             regex_suppression_brut = st.text_input(
                 "Regex additionnelle (optionnelle) pour filtrer davantage",
