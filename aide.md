@@ -53,6 +53,11 @@
 - **Supprimer les balises contenant “Edito”, “AUTRE”, ...** : nettoyage supplémentaire (expérimental).
 - **Regex additionnelle (optionnelle)** : filtre avancé appliqué au texte des balises ciblées (insensible à la casse). Si la regex matche, la balise est supprimée.
 
+Détails sur la suppression par termes (option expérimentale) :
+  - Les termes saisis `complètent le dictionnaire par défaut`.
+  - La comparaison est `sensible à la casse` (ex: « Autre » ne supprime pas « autre »).
+  - La recherche `ne scanne pas tout le texte` : elle cible uniquement les balises `<p>` avec la classe `sm-margin-bottomNews` et les balises `<div>`.
+
 ### Contenu à exporter
 - **Texte complet**
 - **Titre uniquement**
