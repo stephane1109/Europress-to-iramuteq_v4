@@ -72,7 +72,7 @@ Pour chaque `<article>` :
 - L’utilisateur peut exporter un corpus sans doublons et/ou sans articles courts. Le texte est reconstruit à partir des articles
   retenus.
 
-### Aide regex (rappels essentiels
+### Aide regex
 
 Ces motifs s’utilisent dans le champ Regex additionnelle (sans préfixe r) pour filtrer davantage les balises lors du nettoyage expérimental.
 Principales règles
