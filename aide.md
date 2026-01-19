@@ -51,7 +51,7 @@
 
 ### Nettoyage expérimental
 - **Supprimer les balises contenant “Edito”, “AUTRE”, ...** : nettoyage supplémentaire (expérimental).
-- **Regex additionnelle (optionnelle)** : filtre avancé appliqué au texte des balises ciblées (insensible à la casse). Si la regex matche, la balise est supprimée.
+- **Regex additionnelle (optionnelle)** : filtre avancé appliqué au texte des balises ciblées (insensible à la casse). Si la regex matche, la balise est supprimée. Les correspondances sont appliquées au texte complet de l’article (tout le corpus).
 
 Détails sur la suppression par termes (option expérimentale) :
   - Les termes saisis `complètent le dictionnaire par défaut`.
@@ -80,10 +80,11 @@ Ces motifs s’utilisent dans le champ **Regex additionnelle** (sans préfixe `r
 ### Principales règles
 - **Début/fin de ligne** : `^` (début), `$` (fin).  
   *Ex.* `^Le Figaro` (commence par “Le Figaro”).
-- **Alternatives (OU)** : `motif1|motif2`.  
+- **Alternatives (OU)** : `motif1|motif2` pour une seule regex avec plusieurs options.  
   *Ex.* `\bPage\s*3\b|\bAnnexe\b`.
-- **Conditions (ET)** : utiliser des lookaheads pour exiger plusieurs motifs.  
-  *Ex.* `(?=.*\bPage\b)(?=.*\b3\b)` (les deux doivent être présents).
+- **Conditions (ET)** : séparer plusieurs regex par `ET` pour appliquer plusieurs règles.  
+  *Ex.* `\bPage\s*2\b ET \bPage\s*3\b` (chaque motif est évalué).  
+  *(Pour exiger la présence simultanée : lookaheads comme `(?=.*\bPage\b)(?=.*\b3\b)`.)*
 - **Classes de caractères** : `[A-Z]` (lettres majuscules), `[0-9]` (chiffres).  
   *Ex.* `^Page [0-9]+$`.
 - **Quantificateurs** : `*` (0+), `+` (1+), `?` (0 ou 1), `{m,n}` (entre m et n).  
