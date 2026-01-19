@@ -72,12 +72,13 @@ Pour chaque `<article>` :
 - L’utilisateur peut exporter un corpus sans doublons et/ou sans articles courts. Le texte est reconstruit à partir des articles
   retenus.
 
+-----------------------------------------
 ### Aide regex
 
 Ces motifs s’utilisent dans le champ Regex additionnelle (sans préfixe r) pour filtrer davantage les balises lors du nettoyage expérimental.
 Principales règles
 
-### Exemple de 3 règles séparées à saisir dans l’interface
+#### Exemple de 3 règles séparées à saisir dans l’interface
 Ces trois règles sont **indépendantes**. L’utilisateur peut les tester **une par une** dans le champ **Regex additionnelle** selon le besoin.
 
 1. **Supprimer exactement “Page 12”**  
