@@ -51,6 +51,7 @@
 
 ### Nettoyage expérimental
 - **Supprimer les balises contenant “Edito”, “AUTRE”, ...** : nettoyage supplémentaire (expérimental).
+- **Regex additionnelle (optionnelle)** : filtre avancé appliqué au texte des balises ciblées (insensible à la casse). Si la regex matche, la balise est supprimée.
 
 ### Contenu à exporter
 - **Texte complet**
@@ -66,3 +67,27 @@
 - **Exporter le corpus sans doublons** : supprime les doublons détectés.
 - **Exporter le corpus sans les articles trop courts** : filtre par longueur minimale.
 - **Télécharger les fichiers (ZIP)** : génère `.txt`, `.csv`, `.xlsx` dans un ZIP.
+
+## Aide regex (rappels essentiels)
+
+Ces motifs s’utilisent dans le champ **Regex additionnelle** (sans préfixe `r`) pour filtrer davantage les balises lors du nettoyage expérimental.
+
+### Principales règles
+- **Début/fin de ligne** : `^` (début), `$` (fin).  
+  *Ex.* `^Le Figaro` (commence par “Le Figaro”).
+- **Alternatives (OU)** : `motif1|motif2`.  
+  *Ex.* `\bPage\s*3\b|\bAnnexe\b`.
+- **Classes de caractères** : `[A-Z]` (lettres majuscules), `[0-9]` (chiffres).  
+  *Ex.* `^Page [0-9]+$`.
+- **Quantificateurs** : `*` (0+), `+` (1+), `?` (0 ou 1), `{m,n}` (entre m et n).  
+  *Ex.* `\s*` (espaces optionnels), `\d{2,4}`.
+- **Caractères spéciaux** : `.` (n’importe quel caractère), `\s` (espaces), `\d` (chiffres), `\w` (lettres/chiffres/underscore), `\b` (frontière de mot).
+- **Groupes** : `(…)` pour regrouper.  
+  *Ex.* `^(Page|Annexe)\s*\d+$`.
+- **Échapper un caractère spécial** : précéder par `\`.  
+  *Ex.* `\.` pour un point, `\(` pour une parenthèse.
+
+### Exemples utiles
+- **Supprimer “Page 3”, “Page 12”** : `\bPage\s*\d+\b`
+- **Supprimer une mention de source** : `^Source\s*:`
+- **Supprimer les mentions “Annexe A/B”** : `\bAnnexe\s*[A-Z]\b`
