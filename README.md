@@ -77,14 +77,14 @@ Pour chaque `<article>` :
 Ces motifs s’utilisent dans le champ Regex additionnelle (sans préfixe r) pour filtrer davantage les balises lors du nettoyage expérimental.
 Principales règles
 
-    `Début/fin de ligne : ^ (début), $ (fin).`
-    `Ex. ^Le Figaro (commence par “Le Figaro”).`
-    `Alternatives (OU) : motif1|motif2.`
-    `Ex. \bPage\s*3\b|\bAnnexe\b.`
+  -`Début/fin de ligne : ^ (début), $ (fin).`
+  -`Ex. ^Le Figaro (commence par “Le Figaro”).`
+  -`Alternatives (OU) : motif1|motif2.`
+  -`Ex. \bPage\s*3\b|\bAnnexe\b.`
 
 Exemples utiles
 
-    `Supprimer “Page 3”, “Page 12” : \bPage\s*\d+\b`
+  -`Supprimer “Page 3”, “Page 12” : \bPage\s*\d+\b`
 
 
 
