@@ -676,7 +676,18 @@ def afficher_interface_europresse():
 
     processed_data = st.session_state.get("processed_data")
     st.markdown('<div id="exports"></div>', unsafe_allow_html=True)
-    st.markdown(f"<h2>{export_icon_html} Export</h2>", unsafe_allow_html=True)
+    if export_icon_html:
+        export_icon_html = export_icon_html.replace(
+            'alt="Exports"',
+            'alt="Exports" style="width:32px;height:32px;"',
+        )
+    export_header_html = (
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
+        f'{export_icon_html}'
+        '<h2 style="margin:0;">Export</h2>'
+        '</div>'
+    )
+    st.markdown(export_header_html, unsafe_allow_html=True)
     if processed_data:
         texte_final_export = processed_data["texte_final"]
         data_for_csv_export = processed_data["data_for_csv"]
