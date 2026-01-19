@@ -585,6 +585,16 @@ def afficher_interface_europresse():
                 value="",
                 placeholder="Ex: ^Le Figaro",
             )
+            st.caption(
+                "Aide regex : exemple pour supprimer « Page 3 » → "
+                r"`\bPage\s*3\b` (les limites de mot évitent les sous-chaînes). "
+                "Plusieurs motifs ? utilisez `motif1|motif2` (ex: "
+                r"`\bPage\s*3\b|\bAnnexe\b`). "
+                "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
+                "appuyez sur Entrée pour valider. "
+                "La regex est appliquée aux textes des balises ciblées : si elle "
+                "matche, la balise est supprimée (recherche insensible à la casse)."
+            )
             if termes_supplementaires_brut:
                 termes_supplementaires = [
                     terme.strip()
