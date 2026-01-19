@@ -540,12 +540,12 @@ def afficher_interface_europresse():
         ):
             st.session_state["processed_data"] = None
             st.session_state["processed_filename"] = None
-        # variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
+        # variable_suppl_texte = st.text_input("Ajoutez votre variable supplémentaire (sans *)")
         nom_journal_checked = st.checkbox("Inclure le nom du journal", value=True)
         date_annee_mois_jour_checked = st.checkbox("Inclure la date (année-mois-jour)", value=True)
         date_annee_mois_checked = st.checkbox("Inclure la date (année-mois)", value=True)
         date_annee_checked = st.checkbox("Inclure l'année uniquement", value=True)
-        variable_suppl_texte = st.text_input("Votre variable supplémentaire (optionnel)")
+        variable_suppl_texte = st.text_input("Ajoutez votre variable supplémentaire (sans *)")
 
         # --- Explication des méthodes d'extraction (Markdown)
         st.markdown("""
