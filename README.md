@@ -108,6 +108,6 @@ Ces trois règles sont **indépendantes**. L’utilisateur peut les tester **une
 
 -----------------------------------------
 ### Utilisation
-1. Rendez-vous sur l'application [Europresse to IRaMuTeQ] : https://europresse-to-iramuteq.streamlit.app/
+1. Rendez-vous sur l'application [Europresse to IRaMuTeQ] : [https://europresse-to-iramuteq.streamlit.app/] : https://europress-to-iramuteq-v4.streamlit.app/
 2. Glissez-déposez vos fichiers HTML pour les traiter.
 3. Téléchargez les résultats au format texte ou CSV.
