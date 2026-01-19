@@ -80,10 +80,10 @@ Ces motifs s’utilisent dans le champ **Regex additionnelle** (sans préfixe `r
 ### Principales règles
 - **Début/fin de ligne** : `^` (début), `$` (fin).  
   *Ex.* `^Le Figaro` (commence par “Le Figaro”).
-- **Alternatives (OU)** : `motif1|motif2`.  
+- **Alternatives (OU)** : `motif1|motif2` pour une seule regex avec plusieurs options.  
   *Ex.* `\bPage\s*3\b|\bAnnexe\b`.
 - **Conditions (ET)** : séparer plusieurs regex par `ET` pour appliquer plusieurs règles.  
-  *Ex.* `\bPage\b ET \b3\b` (chaque motif est évalué).  
+  *Ex.* `\bPage\s*2\b ET \bPage\s*3\b` (chaque motif est évalué).  
   *(Pour exiger la présence simultanée : lookaheads comme `(?=.*\bPage\b)(?=.*\b3\b)`.)*
 - **Classes de caractères** : `[A-Z]` (lettres majuscules), `[0-9]` (chiffres).  
   *Ex.* `^Page [0-9]+$`.

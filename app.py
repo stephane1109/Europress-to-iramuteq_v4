@@ -608,16 +608,17 @@ def afficher_interface_europresse():
             st.caption(
                 "Aide regex : exemple pour supprimer « Page 3 » → "
                 r"`\bPage\s*3\b`"
-                "Plusieurs motifs ? utilisez `motif1|motif2` (OU) (ex: "
-                r"`\bPage\s*3\b|\bAnnexe\b`). "
-                "Besoin d'appliquer plusieurs règles ? séparez vos regex par `ET`, ex: "
-                r"`\bPage\b ET \b3\b` (chaque motif est évalué). "
+                "Pour une seule regex avec plusieurs alternatives, utilisez `|` (OU), ex: "
+                r"`\bPage\s*3\b|\bAnnexe\b`. "
+                "Pour enchaîner plusieurs regex indépendantes, séparez-les par `ET`, ex: "
+                r"`\bPage\s*2\b ET \bPage\s*3\b` (chaque motif est évalué). "
                 "Pour exiger la présence simultanée, utilisez des lookaheads, ex: "
                 r"`(?=.*\bPage\b)(?=.*\b3\b)`. "
                 "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
                 "appuyez sur Entrée pour valider. "
-                "La regex est appliquée au texte complet de l'article (tout le corpus) : les "
-                "correspondances sont supprimées (recherche sensible à la casse)."
+                "Regex additionnelle : si la regex matche, la balise est supprimée. "
+                "Les correspondances sont appliquées au texte complet de l'article (tout le corpus). "
+                "Les correspondances sont supprimées (recherche sensible à la casse)."
             )
             if termes_supplementaires_brut:
                 termes_supplementaires = [
