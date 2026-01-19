@@ -338,6 +338,9 @@ def extraire_texte_html(
             texte_article = "\n".join(morceaux)
         else:
             texte_article = article.get_text("\n", strip=True)
+
+        if supprimer_balises and regex_suppression and texte_article:
+            texte_article = regex_suppression.sub("", texte_article)
             # Le "\n" dans get_text() permet d’éviter que tout soit sur une seule ligne.
 
         # --------------------------------------------------------------------
@@ -601,8 +604,8 @@ def afficher_interface_europresse():
                 r"`(?=.*\bPage\b)(?=.*\b3\b)` (les deux doivent être présents). "
                 "Dans ce champ, saisissez uniquement la regex (sans le `r`), puis "
                 "appuyez sur Entrée pour valider. "
-                "La regex est appliquée aux textes des balises ciblées : si elle "
-                "matche, la balise est supprimée (recherche sensible à la casse)."
+                "La regex est appliquée au texte complet de l'article : les "
+                "correspondances sont supprimées (recherche sensible à la casse)."
             )
             if termes_supplementaires_brut:
                 termes_supplementaires = [
