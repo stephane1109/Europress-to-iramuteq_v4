@@ -72,11 +72,37 @@ Pour chaque `<article>` :
 - L’utilisateur peut exporter un corpus sans doublons et/ou sans articles courts. Le texte est reconstruit à partir des articles
   retenus.
 
+### Aide regex (rappels essentiels
+
+Ces motifs s’utilisent dans le champ Regex additionnelle (sans préfixe r) pour filtrer davantage les balises lors du nettoyage expérimental.
+Principales règles
+
+    Début/fin de ligne : ^ (début), $ (fin).
+    Ex. ^Le Figaro (commence par “Le Figaro”).
+    Alternatives (OU) : motif1|motif2.
+    Ex. \bPage\s*3\b|\bAnnexe\b.
+    Classes de caractères : [A-Z] (lettres majuscules), [0-9] (chiffres).
+    Ex. ^Page [0-9]+$.
+    Quantificateurs : * (0+), + (1+), ? (0 ou 1), {m,n} (entre m et n).
+    Ex. \s* (espaces optionnels), \d{2,4}.
+    Caractères spéciaux : . (n’importe quel caractère), \s (espaces), \d (chiffres), \w (lettres/chiffres/underscore), \b (frontière de mot).
+    Groupes : (…) pour regrouper.
+    Ex. ^(Page|Annexe)\s*\d+$.
+    Échapper un caractère spécial : précéder par \.
+    Ex. \. pour un point, \( pour une parenthèse.
+
+Exemples utiles
+
+    Supprimer “Page 3”, “Page 12” : \bPage\s*\d+\b
+    Supprimer une mention de source : ^Source\s*:
+    Supprimer les mentions “Annexe A/B” : \bAnnexe\s*[A-Z]\b
+
+
 #### 6) Exports générés
 - **TXT** : corpus IRaMuTeQ complet.
 - **CSV** : colonnes `Journal`, `Année-mois-jour`, `Année-mois`, `Année`, `Article`.
 - **XLSX** : export Excel des mêmes colonnes (via pandas).
-- Les trois fichiers sont empaquetés dans un ZIP, nommé à partir du fichier HTML d’origine.
+- Les trois fichiers sont dans un ZIP, nommé à partir du fichier HTML d’origine.
 
 -----------------------------------------
 ### Utilisation
