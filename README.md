@@ -1,8 +1,9 @@
 -----------------------------------------
-### Projet : Europresse to IRaMuTeQ - Appli streamlit
+### Projet : Europresse to IRaMuTeQ - Appli streamlit Cloud
 - Auteur : Stéphane Meurisse
 - Contact : stephane.meurisse@gmail.com
 - Site Web : https://www.codeandcortex.fr
+- Aplli : https://europress-to-iramuteq-v4.streamlit.app/
 - LinkedIn : https://www.linkedin.com/in/st%C3%A9phane-meurisse-27339055/
 - Date : 17 janvier 2026
 - Version : 4
@@ -108,6 +109,6 @@ Ces trois règles sont **indépendantes**. L’utilisateur peut les tester **une
 
 -----------------------------------------
 ### Utilisation
-1. Rendez-vous sur l'application [Europresse to IRaMuTeQ] : [https://europresse-to-iramuteq.streamlit.app/] : https://europress-to-iramuteq-v4.streamlit.app/
+1. Rendez-vous sur l'application [Europresse to IRaMuTeQ] : https://europress-to-iramuteq-v4.streamlit.app/
 2. Glissez-déposez vos fichiers HTML pour les traiter.
 3. Téléchargez les résultats au format texte ou CSV.
