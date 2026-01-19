@@ -586,8 +586,8 @@ def afficher_interface_europresse():
                 placeholder="Ex: ^Le Figaro",
             )
             st.caption(
-                "Aide regex : pour supprimer un mot précis, utilisez par exemple "
-                r"`\bmot\b` (les limites de mot évitent les sous-chaînes). "
+                "Aide regex : exemple pour supprimer « Page 3 » → "
+                r"`\bPage\s*3\b` (les limites de mot évitent les sous-chaînes). "
                 "La regex est appliquée aux textes des balises ciblées : si elle "
                 "matche, la balise est supprimée (recherche insensible à la casse)."
             )
